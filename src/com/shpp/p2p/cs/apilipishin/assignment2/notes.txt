@@ -1,0 +1,40 @@
+Assignment2Part1:
+1. Too much static. Advice - avoid static when it is possible.
+2. Variables that should be in method scope are in global scope.
+3. EdgeCase - when a = 0, no input check;
+4. No else block.
+Score - 4
+
+Assignment2Part2:
+1. No comments above class to describe what class do.
+
+Advice - It's better to pass arguments to method.
+Score - 5
+
+Assignment2Part3:
+1. No comments above class to describe what class do.
+
+Score - 5
+
+Assignment2Part4:
+1. No comments above class to describe what class do.
+2. Comments -
+    /*
+    Constants:
+    WIDTH - width of one section of flag
+    HEIGHT - flag height
+    COUNTRY - name of country
+     */
+Its better to rename constant WIDTH -> WIDTH_OF_ONE_SECTION
+Score - 5
+
+Assignment2Part5:
+1. No comments above class to describe what class do.
+2. Unnecessary arguments in methods createRectangle(),
+its better to extract calculation of X and Y coordinate.
+
+Score - 5
+
+Assignment2Part6:
+
+Score - 5
