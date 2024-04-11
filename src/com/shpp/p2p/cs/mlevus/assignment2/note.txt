@@ -1,0 +1,28 @@
+Assignment2Part1:
+1. Edge case when we input a wrong data type to console
+2. Only "a" coefficient cant equal zero in quadratic
+3. It`s better to extract check and inputs to separate method
+
+Score - 4
+
+Assignment2Part2:
+1. Constants for colors which are already constants
+
+Score - 5
+
+Assignment2Part3:
+
+Score - 5
+
+Assignment2Part4:
+
+Score - 5
+
+Assignment2Part5:
+1. Constants for colors which are already constants
+
+Score - 5
+
+Assignment2Part6:
+
+Score - 5
