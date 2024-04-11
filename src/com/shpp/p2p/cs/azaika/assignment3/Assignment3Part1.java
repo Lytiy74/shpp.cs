@@ -33,19 +33,32 @@ public class Assignment3Part1 {
             "  You needed to train hard for at least %s more day(s) a week!";
 
     public static void main(String[] args) {
-        System.out.println(analysAerobicCondition());
+        Assignment3Part1 aerobicAnalyse = new Assignment3Part1();
+        System.out.println(aerobicAnalyse.analysAerobicCondition());
     }
 
     /**
      * Collecting user data and then analysis.
      * This method uses Stream API to filter and count
      * how much user spends time for activity.
+     *
      * @return prepared report with replaced placeholders
      */
-    private static String analysAerobicCondition() {
+    private String analysAerobicCondition() {
         //make array to store user data.
-        int[] userData = collectUserData(new int[DAYS_OF_THE_WEEK]);
+        int[] userData = collectUserIntDataToArray(new int[DAYS_OF_THE_WEEK]);
+        return analysAerobicCondition(userData);
+    }
+
+    /**
+     * Overloaded method of analysAerobicCondition
+     * @param userData - if we have a prepared array with data
+     * @return prepared report with replaced placeholders
+     */
+    private String analysAerobicCondition(int[] userData){
+        //make array to store user data.
         int daysForCardio, daysForBlood;
+
         daysForCardio = (int) Arrays.stream(userData)
                 .filter(x -> x >= REQUIRED_MINUTES_PER_DAY_FOR_CARDIO)
                 .count();
@@ -61,29 +74,42 @@ public class Assignment3Part1 {
      * user must pass the correct number to array, if user passes the wrong type the
      * exception will be caught.
      * <p><b>Result:</b></p> will return a filled integer array;
-     * @param userData  initialized array where will be recorded data from user;
+     *
+     * @param userData initialized array where will be recorded data from user;
      * @return filled integer array
      */
-    private static int[] collectUserData(int[] userData) {
+    private int[] collectUserIntDataToArray(int[] userData) {
         //Make instance of buffer reader to read user input in console
-        BufferedReader bf = new BufferedReader(new InputStreamReader(System.in));
+        try (BufferedReader bf = new BufferedReader(new InputStreamReader(System.in))) {
+            //Iterate over an array to read and record data from console
+            for (int i = 0; i < userData.length; i++) {
+                //Surround it to try/catch construction to catch an exception if a user passes a wrong type of data.
+                try {
+                    System.out.format("How many minutes did you do on day %s? ", i + 1);
+                    int inputValue = Integer.parseInt(bf.readLine());
 
-        //Iterate over an array to read and record data from console
-        for (int i = 0; i < userData.length; i++) {
-            //Surround it to try/catch construction to catch an exception if a user passes a wrong type of data.
-            try {
-                System.out.format("How many minutes did you do on day %s? ", i + 1);
-                userData[i] = Integer.parseInt(bf.readLine());
-            } catch (NumberFormatException e) {
-                i--;
-                System.out.println("Ooops! Wrong input \n" +
-                        "Try again with correct number!");
-            } catch (IOException e) {
-                throw new RuntimeException(e);
+                    if (inputValue >= 0) {
+                        userData[i] = inputValue;
+                    } else throw new NumberFormatException();
+
+                } catch (NumberFormatException e) {
+                    System.out.println("Ooops! Wrong input \n" +
+                            "Try again with correct number!");
+                    i--;
+                }
             }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
         return userData;
     }
+
+    /**
+     * Method to build a report message
+     * @param daysForCardio - must be specified in analysAerobicCondition method
+     * @param daysForBlood - must be specified in analysAerobicCondition method
+     * @return String with a report of aerobic condition
+     */
     private static String buildAndGetMessage(int daysForCardio, int daysForBlood) {
         String result;
         if (daysForCardio >= REQUIRED_DAYS_FOR_CARDIO) {
