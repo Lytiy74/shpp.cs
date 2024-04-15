@@ -46,7 +46,7 @@ public class Assignment3Part1 {
      */
     private String analysAerobicCondition() {
         //make array to store user data.
-        int[] userData = collectUserIntDataToArray(new int[DAYS_OF_THE_WEEK]);
+        int[] userData = collectUserDataToIntArray(new int[DAYS_OF_THE_WEEK]);
         return analysAerobicCondition(userData);
     }
 
@@ -78,7 +78,7 @@ public class Assignment3Part1 {
      * @param userData initialized array where will be recorded data from user;
      * @return filled integer array
      */
-    private int[] collectUserIntDataToArray(int[] userData) {
+    private int[] collectUserDataToIntArray(int[] userData) {
         //Make instance of buffer reader to read user input in console
         try (BufferedReader bf = new BufferedReader(new InputStreamReader(System.in))) {
             //Iterate over an array to read and record data from console
@@ -117,6 +117,7 @@ public class Assignment3Part1 {
         } else {
             result = String.format(BAD_CARDIOVASCULAR_MESSAGE, REQUIRED_DAYS_FOR_CARDIO - daysForCardio);
         }
+
         if (daysForBlood >= REQUIRED_DAYS_FOR_BLOOD_PRESSURE) {
             result += GOOD_BLOOD_PRESSURE_MESSAGE;
         } else {
