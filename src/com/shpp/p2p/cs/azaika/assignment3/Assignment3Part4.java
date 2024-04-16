@@ -12,7 +12,7 @@ public class Assignment3Part4 extends WindowProgram {
     /* The width of each brick. */
     private static final double BRICK_WIDTH = 40;
     /* The number of bricks in the base of the pyramid. */
-    private static final int BRICKS_IN_BASE = 15;
+    private static final int BRICKS_IN_BASE = 16;
 
     @Override
     public void run() {
@@ -31,8 +31,8 @@ public class Assignment3Part4 extends WindowProgram {
         int amountOfBricksInRow = bricksInBase;
 
         for (int row = 0; row <= bricksInBase; row++) {
+            double middleOfRow = amountOfBricksInRow * brickWidth / 2;
             for (int column = 0; column < amountOfBricksInRow; column++) {
-                double middleOfRow = amountOfBricksInRow * brickWidth / 2;
                 double x = (getWidth() / 2.0 - middleOfRow) + (column * brickWidth);
                 double y = getHeight() - brickHeight - (row * brickHeight);
                 drawBrick(x, y, brickWidth, brickHeight);

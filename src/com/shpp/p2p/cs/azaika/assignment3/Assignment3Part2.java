@@ -20,7 +20,7 @@ public class Assignment3Part2 {
      * Method reads and checks console input;
      * @return int number which user prints in console
      */
-    private static int readIntFromConsole() {
+    private int readIntFromConsole() {
         try (BufferedReader bf = new BufferedReader(new InputStreamReader(System.in))) {
                 return Integer.parseInt(bf.readLine());
         } catch (NumberFormatException e) {

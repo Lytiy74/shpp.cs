@@ -52,21 +52,20 @@ public class Assignment3Part1 {
 
     /**
      * Overloaded method of analysAerobicCondition
+     *
      * @param userData - if we have a prepared array with data
      * @return prepared report with replaced placeholders
      */
-    private String analysAerobicCondition(int[] userData){
-        //make array to store user data.
-        int daysForCardio, daysForBlood;
-
-        daysForCardio = (int) Arrays.stream(userData)
+    private String analysAerobicCondition(int[] userData) {
+        //Count with stream API
+        int minutesForCardio = (int) Arrays.stream(userData)
                 .filter(x -> x >= REQUIRED_MINUTES_PER_DAY_FOR_CARDIO)
                 .count();
-        daysForBlood = (int) Arrays.stream(userData)
+        int minutesForBloodPressure = (int) Arrays.stream(userData)
                 .filter(x -> x >= REQUIRED_MINUTES_PER_DAY_FOR_BLOOD_PRESSURE)
                 .count();
 
-        return buildAndGetMessage(daysForCardio, daysForBlood);
+        return buildAndGetMessage(minutesForCardio, minutesForBloodPressure);
     }
 
     /**
@@ -106,8 +105,9 @@ public class Assignment3Part1 {
 
     /**
      * Method to build a report message
+     *
      * @param daysForCardio - must be specified in analysAerobicCondition method
-     * @param daysForBlood - must be specified in analysAerobicCondition method
+     * @param daysForBlood  - must be specified in analysAerobicCondition method
      * @return String with a report of aerobic condition
      */
     private static String buildAndGetMessage(int daysForCardio, int daysForBlood) {

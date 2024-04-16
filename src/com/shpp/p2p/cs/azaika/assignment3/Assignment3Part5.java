@@ -41,9 +41,7 @@ public class Assignment3Part5 {
             // Reset the bet amount for the next game
             moneyOnTable = 1;
 
-            // Display the earnings for the current game and the total earnings
-            System.out.printf(MESSAGE_YOU_EARN, currentGameProfit);
-            System.out.printf(MESSAGE_YOUR_TOTAL, luckGuyMoney);
+            sendReportToConsole(currentGameProfit, luckGuyMoney);
 
             // Increment the game counter
             counter++;
@@ -51,5 +49,11 @@ public class Assignment3Part5 {
 
         // Display the number of games it took to reach $20
         System.out.printf(MESSAGE_IT_TOOK_N_GAMES_TO_EARN, counter, luckGuyMoney);
+    }
+
+    private static void sendReportToConsole(int currentGameProfit, int luckGuyMoney) {
+        // Display the earnings for the current game and the total earnings
+        System.out.printf(MESSAGE_YOU_EARN, currentGameProfit);
+        System.out.printf(MESSAGE_YOUR_TOTAL, luckGuyMoney);
     }
 }
