@@ -5,6 +5,7 @@ import acm.graphics.GRect;
 import com.shpp.cs.a.graphics.WindowProgram;
 
 import java.awt.event.MouseEvent;
+import java.util.Random;
 
 public class Assignment4Part1 extends WindowProgram {
     private static final double BALL_SIZE = 10.0;
@@ -44,25 +45,44 @@ public class Assignment4Part1 extends WindowProgram {
     }
 
     private void startGame() {
+        Random random = new Random();
         double dy = 5 ;
+        double dx = random.nextInt(11)-5 ;
         while(true){
-            ball.move(0,dy);
+            ball.move(dx,dy);
 
-            if (ballHitRocket(ball) || ballHitWall()){
+            if (ballHitRocket(ball) || ballHitRocketY(ball)){
                 dy*= -1;
+            }else if (ballHitWallX(ball)){
+                dx*= -1;
             }
             pause(PAUSE_TIME);
         }
     }
 
-    private boolean ballHitWall() {
-        return true;
+    private boolean ballHitRocketY(GOval ball) {
+        return (ball.getY() <= 0) || (ball.getY() >= getHeight());
+    }
+
+    private boolean ballHitWallX(GOval ball) {
+        return ball.getX() <= 0 || ball.getX() >= getWidth();
     }
 
     private boolean ballHitRocket(GOval ball) {
-        return ((ball.getY() + ball.getHeight()) >= rocket.getY())
-                && ((ball.getX() + ball.getHeight()) >= rocket.getX()
+        return ((ball.getY() + ball.getHeight()) >= rocket.getY() &&
+                ball.getY() + ball.getHeight() <= rocket.getY() + rocket.getHeight())
+                && (ball.getX() >= rocket.getX()
                 && (ball.getX() <= rocket.getX()+ rocket.getWidth()));
+//        if (getElementAt(ball.getX(), ball.getY() + ball.getHeight()) != null
+//                || getElementAt(ball.getX() + ball.getHeight(), ball.getY() + ball.getHeight()) != null
+//                || getElementAt(ball.getX() + ball.getWidth(), ball.getY()) != null
+//                || getElementAt(ball.getX(), ball.getY()) != null) {
+//            return rocket == getElementAt(ball.getX(), ball.getY() + ball.getHeight())
+//                    || rocket == getElementAt(ball.getX() + ball.getHeight(), ball.getY() + ball.getHeight())
+//                    || rocket == getElementAt(ball.getX() + ball.getWidth(), ball.getY())
+//                    || rocket == getElementAt(ball.getX(), ball.getY());
+//        }
+//        return false;
     }
 
     public void mouseMoved(MouseEvent event) {
