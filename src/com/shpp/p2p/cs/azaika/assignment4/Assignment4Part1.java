@@ -13,9 +13,18 @@ public class Assignment4Part1 extends WindowProgram {
     private static final double HORIZONTAL_VELOCITY = 1.0;
     private static final double ROCKET_WIDTH = 50.0;
     private static final double ROCKET_HEIGHT = 10.0;
+    private static final int ROCKET_OFFSET_Y_AXIS = 50;
+
     public static final int APPLICATION_WIDTH = 300;
     public static final int APPLICATION_HEIGHT = 600;
-    private static final int ROCKET_OFFSET_Y_AXIS = 50;
+
+    private static final int BRICK_WIDTH = 50;
+    private static final int BRICK_HEIGHT = 10;
+    private static final int BRICK_SPACING = 5;
+    private static final int BRICK_START_X_AXIS = 0;
+    private static final int COLUMNS_QUANTITY = 1;
+    private static final int ROWS_QUANTITY = 1;
+
     private GOval ball;
     private GRect rocket;
     @Override
@@ -26,8 +35,25 @@ public class Assignment4Part1 extends WindowProgram {
     private void initGame() {
         addRocket(rocket);
         addBall(ball);
+        drawBricks();
         addMouseListeners();
         startGame();
+    }
+
+    private void drawBricks() {
+        double rowSizeInPixels = (BRICK_WIDTH+BRICK_SPACING) * (ROWS_QUANTITY-1);
+        double columnSizeInPixels = (BRICK_WIDTH+BRICK_SPACING) * (COLUMNS_QUANTITY-1);
+        double middleOfRow = rowSizeInPixels / 2;
+        double middleOfColumn = columnSizeInPixels / 2;
+
+        for (int i = 0; i < ROWS_QUANTITY; i++) {
+            for (int j = 0; j < COLUMNS_QUANTITY; j++) {
+                double x = getWidth()/2 - middleOfRow;
+                double y = getHeight()/2 - middleOfColumn;
+                GRect brick = new GRect(x,y, BRICK_WIDTH,BRICK_HEIGHT);
+                add(brick);
+            }
+        }
     }
 
     private void addBall(GOval ball) {
@@ -51,7 +77,7 @@ public class Assignment4Part1 extends WindowProgram {
         while(true){
             ball.move(dx,dy);
 
-            if (ballHitRocket(ball) || ballHitRocketY(ball)){
+            if (ballHitRocket(ball) || ballHitWallY(ball)){
                 dy*= -1;
             }else if (ballHitWallX(ball)){
                 dx*= -1;
@@ -60,12 +86,12 @@ public class Assignment4Part1 extends WindowProgram {
         }
     }
 
-    private boolean ballHitRocketY(GOval ball) {
+    private boolean ballHitWallY(GOval ball) {
         return (ball.getY() <= 0) || (ball.getY() >= getHeight());
     }
 
     private boolean ballHitWallX(GOval ball) {
-        return ball.getX() <= 0 || ball.getX() >= getWidth();
+        return ball.getX() <= 0 || ball.getX() + ball.getWidth() >= getWidth();
     }
 
     private boolean ballHitRocket(GOval ball) {
