@@ -57,7 +57,6 @@ public class Assignment5Part3 extends TextProgram {
             if (Character.isLetter(test.charAt(i))) {
                 regexBuilder.append(".*");
                 regexBuilder.append(test.toLowerCase().charAt(i));
-                regexBuilder.append("*");
             }
         }
         // Return the built regex pattern
