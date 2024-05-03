@@ -33,7 +33,7 @@ public class Assignment5Part1 extends TextProgram {
                 syllables++;
             }
         }
-        return syllables;
+        return syllables == 0 ? 1 : syllables;
     }
 
     private static boolean isDoubleVowelLetter(char[] chars, int i) {

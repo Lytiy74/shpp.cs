@@ -18,9 +18,20 @@ public class Assignment5Part3 extends TextProgram {
         // Read the English dictionary from file
         dictionaryEng = readDictionary(pathToFile, dictionaryEng);
         // Test number plate
-        String numberPlate = readLine("Enter number plate:");
+        String letters;
+        do{
+            letters = readLine("Enter three letters:");
+        }while (!letters.matches("[A-Za-z]{3}"));
         // Print the result of the game
-        System.out.println(gameRoad(numberPlate));
+        List<String> words = getListOfWordsOfMatchedLetters(letters);
+        printResultToConsole(words);
+    }
+
+    private static void printResultToConsole(List<String> words) {
+        System.out.println("Total words: " + words.size());
+        for (String word : words){
+            System.out.println(word);
+        }
     }
 
     // Method to read the English dictionary from file
@@ -37,15 +48,16 @@ public class Assignment5Part3 extends TextProgram {
     }
 
     // Method to find a word from the dictionary matching a pattern
-    private String gameRoad(String test) {
+    private ArrayList<String> getListOfWordsOfMatchedLetters(String test) {
         // Build the regex pattern based on the test string
         String regex = buildRegex(test);
+        ArrayList <String> result = new ArrayList<>();
 
         // Iterate through the dictionary to find a matching word
         for (String word : dictionaryEng){
-            if (word.matches(regex)) return word;
+            if (word.matches(regex)) result.add(word);
         }
-        return ""; // Return an empty string if no match is found
+        return result;
     }
 
     // Method to build the regex pattern for matching a test string
@@ -53,11 +65,10 @@ public class Assignment5Part3 extends TextProgram {
         // Create a StringBuilder to build the regex pattern
         StringBuilder regexBuilder = new StringBuilder();
         for (int i = 0; i < test.length(); i++) {
-            // If the character is a letter, add regex pattern to match any characters before and after it
-            if (Character.isLetter(test.charAt(i))) {
+            //  add regex pattern to match any characters before and after it
                 regexBuilder.append(".*");
                 regexBuilder.append(test.toLowerCase().charAt(i));
-            }
+                regexBuilder.append(".*");
         }
         // Return the built regex pattern
         return regexBuilder.toString();
