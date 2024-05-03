@@ -1,4 +1,4 @@
-package com.shpp.p2p.cs.azaika.assignment6.Steganography;
+package com.shpp.p2p.cs.azaika.assignment6.Assignment6Part1;
 
 import acm.graphics.GCanvas;
 import acm.graphics.GImage;
