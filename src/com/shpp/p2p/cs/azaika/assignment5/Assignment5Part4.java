@@ -29,6 +29,7 @@ public class Assignment5Part4 extends TextProgram {
             }
         } catch (FileNotFoundException e) {
             System.out.println("File not found. Try again");
+            return null;
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
