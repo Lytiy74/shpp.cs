@@ -11,10 +11,6 @@ public class ToneMatrixLogic {
      * @return A sound sample corresponding to all notes currently being played.
      */
     public static double[] matrixToMusic(boolean[][] toneMatrix, int column, double[][] samples) {
-        double[] result = new double[ToneMatrixConstants.sampleSize()];
-
-		/* TODO: Fill this in! */
-
-        return result;
+        return null;
     }
 }

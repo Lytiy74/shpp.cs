@@ -16,8 +16,8 @@ public class Assignment5Part3 extends TextProgram {
     @Override
     public void run() {
         // Read the English dictionary from file
-        dictionaryEng = readDictionary(pathToFile, dictionaryEng);
-        // Test number plate
+       dictionaryEng = readDictionary(pathToFile);
+        // Request three letters
         String letters;
         do{
             letters = readLine("Enter three letters:");
@@ -35,16 +35,17 @@ public class Assignment5Part3 extends TextProgram {
     }
 
     // Method to read the English dictionary from file
-    private List<String> readDictionary(String path, List<String> list) {
+    private List<String> readDictionary(String path) {
+        ArrayList<String> dictionary = new ArrayList<>();
         try(BufferedReader br = new BufferedReader(new FileReader(String.valueOf(path)))) {
             String line;
             while((line = br.readLine()) != null){
-                list.add(line);
+                dictionary.add(line);
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        return list;
+        return dictionary;
     }
 
     // Method to find a word from the dictionary matching a pattern

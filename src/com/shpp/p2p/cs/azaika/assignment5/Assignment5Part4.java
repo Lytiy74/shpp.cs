@@ -6,10 +6,13 @@ import java.io.*;
 import java.util.ArrayList;
 
 public class Assignment5Part4 extends TextProgram {
-    private static final String FILE_PATH = "Food.csv";
+    private static final String FILE_PATH = "Movies.csv";
     @Override
     public void run() {
-        System.out.println(extractColumn(FILE_PATH,1).toString());
+        ArrayList<String> list = extractColumn(FILE_PATH, 1);
+        if (list != null) {
+            System.out.println(list);
+        }
     }
     /**
      * Extracts a specified column from a CSV file.
