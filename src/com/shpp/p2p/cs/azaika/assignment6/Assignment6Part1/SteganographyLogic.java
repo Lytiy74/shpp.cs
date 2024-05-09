@@ -20,8 +20,7 @@ public class SteganographyLogic {
         boolean[][] result = new boolean[pixelArray.length][pixelArray[0].length];
         for (int i = 0; i < pixelArray.length; i++) {
             for (int j = 0; j < pixelArray[i].length; j++) {
-                if (GImage.getRed(pixelArray[i][j]) % 2 == 0) result[i][j] = false;
-                else result[i][j] = true;
+                result[i][j] = GImage.getRed(pixelArray[i][j]) % 2 != 0;
             }
         }
         return result;
