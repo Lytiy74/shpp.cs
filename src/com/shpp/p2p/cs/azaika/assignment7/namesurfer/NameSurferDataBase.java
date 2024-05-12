@@ -40,6 +40,7 @@ public class NameSurferDataBase implements NameSurferConstants {
         }catch (IOException e) {
             System.out.println("Error reading file: " + filename);
         }
+        System.out.println("Loaded " + entryHashMap.size() + " names surfer.");
         // You fill this in //
     }
 	

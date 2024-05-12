@@ -7,7 +7,6 @@ package com.shpp.p2p.cs.azaika.assignment7.namesurfer;
  * the baby-name database described in the assignment handout.
  */
 
-import acm.program.*;
 import com.shpp.cs.a.simple.SimpleProgram;
 
 import java.awt.event.*;
@@ -27,13 +26,14 @@ public class NameSurfer extends SimpleProgram implements NameSurferConstants {
     public void init() {
         // loading db from specified file.
         dataBase = new NameSurferDataBase(NAMES_DATA_FILE);
-        nameSurferGraph = new NameSurferGraph();
         this.setSize(APPLICATION_WIDTH, APPLICATION_HEIGHT);
         this.add(new JLabel("Name"), "North");
         textField = new JTextField(10);
         this.add(textField, "North");
         this.add(new JButton("Graph"), "North");
         this.add(new JButton("Clear"), "North");
+        nameSurferGraph = new NameSurferGraph();
+        this.add(nameSurferGraph);
         this.addActionListeners();
     }
 
@@ -49,9 +49,12 @@ public class NameSurfer extends SimpleProgram implements NameSurferConstants {
             case "Graph":
                 NameSurferEntry entry = dataBase.findEntry(textField.getText());
                 nameSurferGraph.addEntry(entry);
+                System.out.println("Graph: " + textField.getText());
+                System.out.println(nameSurferGraph.getElementCount());
                 break;
             case "Clear":
                 nameSurferGraph.clear();
+                System.out.println("Clear");
                 break;
         }
     }

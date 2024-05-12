@@ -12,18 +12,17 @@ package com.shpp.p2p.cs.azaika.assignment7.namesurfer;
 import acm.graphics.*;
 
 import java.awt.event.*;
-import java.util.*;
-import java.awt.*;
+import java.util.HashMap;
 
 public class NameSurferGraph extends GCanvas
         implements NameSurferConstants, ComponentListener {
+    HashMap<String, NameSurferEntry> entryHashMap = new HashMap<>();
 
     /**
      * Creates a new NameSurferGraph object that displays the data.
      */
     public NameSurferGraph() {
         addComponentListener(this);
-        // You fill in the rest //
     }
 
 
@@ -31,9 +30,9 @@ public class NameSurferGraph extends GCanvas
      * Clears the list of name surfer entries stored inside this class.
      */
     public void clear() {
-        // You fill this in //
+        this.removeAll();
+        update();
     }
-
 	
 	/* Method: addEntry(entry) */
 
@@ -43,7 +42,8 @@ public class NameSurferGraph extends GCanvas
      * simply stores the entry; the graph is drawn by calling update.
      */
     public void addEntry(NameSurferEntry entry) {
-        // You fill this in //
+        entryHashMap.put(entry.getName(), entry);
+        update();
     }
 
 
@@ -55,7 +55,24 @@ public class NameSurferGraph extends GCanvas
      * the size of the canvas changes.
      */
     public void update() {
-        // You fill this in //
+        removeAll();
+        drawSheet();
+    }
+
+    private void drawSheet() {
+        //draw upper horizontal line
+        add(new GLine(0, GRAPH_MARGIN_SIZE, getWidth(), GRAPH_MARGIN_SIZE));
+        //draw lower horizontal line
+        add(new GLine(0, getHeight() - GRAPH_MARGIN_SIZE, getWidth(),getHeight() - GRAPH_MARGIN_SIZE));
+        for (int i = 0; i < NDECADES; i++) {
+            //draw vertical line to separate decades
+            add(new GLine(i * (getWidth()/NDECADES), 0, i * (getWidth()/NDECADES), getHeight()));
+            int decade = START_DECADE + (10 * i);
+            //draw label with number of year
+            GLabel label = new GLabel(String.valueOf(decade));
+            label.setLocation(i * (getWidth()/NDECADES),getHeight() - label.getDescent());
+            add(label);
+        }
     }
 
 
