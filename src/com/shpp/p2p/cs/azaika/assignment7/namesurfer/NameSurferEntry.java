@@ -11,6 +11,8 @@ package com.shpp.p2p.cs.azaika.assignment7.namesurfer;
 import java.util.*;
 
 public class NameSurferEntry implements NameSurferConstants {
+    private final String name;
+    private final int[] rank;
 
 	/* Constructor: NameSurferEntry(line) */
 
@@ -21,7 +23,12 @@ public class NameSurferEntry implements NameSurferConstants {
      * decade.
      */
     public NameSurferEntry(String line) {
-        // You fill this in //
+        String[] parts = line.split(" ");
+        name = parts[0];
+        rank = new int[parts.length - 1];
+        for (int i = 1; i < parts.length; i++) {
+            rank[i - 1] = Integer.parseInt(parts[i]);
+        }
     }
 
 	/* Method: getName() */
@@ -30,8 +37,7 @@ public class NameSurferEntry implements NameSurferConstants {
      * Returns the name associated with this entry.
      */
     public String getName() {
-        // You need to turn this stub into a real implementation //
-        return null;
+        return this.name;
     }
 
 	/* Method: getRank(decade) */
@@ -44,8 +50,7 @@ public class NameSurferEntry implements NameSurferConstants {
      * not appear in a decade, the rank value is 0.
      */
     public int getRank(int decade) {
-        // You need to turn this stub into a real implementation //
-        return 0;
+        return decade < rank.length ? rank[decade] : 0;
     }
 
 	/* Method: toString() */
@@ -56,7 +61,7 @@ public class NameSurferEntry implements NameSurferConstants {
      */
     public String toString() {
         // You need to turn this stub into a real implementation //
-        return "";
+        return name + " " + Arrays.toString(rank);
     }
 }
 

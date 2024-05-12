@@ -11,7 +11,14 @@ package com.shpp.p2p.cs.azaika.assignment7.namesurfer;
  * and "ERIC" are the same names.
  */
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.HashMap;
+
 public class NameSurferDataBase implements NameSurferConstants {
+    private final HashMap<String, NameSurferEntry> entryHashMap = new HashMap<>();
 
 	/* Constructor: NameSurferDataBase(filename) */
 
@@ -22,6 +29,17 @@ public class NameSurferDataBase implements NameSurferConstants {
      * occurs as the file is being read.
      */
     public NameSurferDataBase(String filename) {
+        try(BufferedReader br = new BufferedReader(new FileReader(filename))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                NameSurferEntry entry = new NameSurferEntry(line);
+                entryHashMap.put(entry.getName(), entry);
+            }
+        }catch (FileNotFoundException e) {
+            System.out.println("File not found: " + filename);
+        }catch (IOException e) {
+            System.out.println("Error reading file: " + filename);
+        }
         // You fill this in //
     }
 	
@@ -33,8 +51,7 @@ public class NameSurferDataBase implements NameSurferConstants {
      * method returns null.
      */
     public NameSurferEntry findEntry(String name) {
-        // You need to turn this stub into a real implementation //
-        return null;
+        return entryHashMap.get(name);
     }
 }
 
