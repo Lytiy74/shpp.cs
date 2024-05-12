@@ -14,6 +14,9 @@ import java.awt.event.*;
 import javax.swing.*;
 
 public class NameSurfer extends SimpleProgram implements NameSurferConstants {
+    private NameSurferDataBase dataBase;
+    private NameSurferGraph nameSurferGraph;
+    private JTextField textField;
 
 	/* Method: init() */
 
@@ -22,7 +25,16 @@ public class NameSurfer extends SimpleProgram implements NameSurferConstants {
      * and initializing the interactors at the top of the window.
      */
     public void init() {
-        // You fill this in, along with any helper methods //
+        // loading db from specified file.
+        dataBase = new NameSurferDataBase(NAMES_DATA_FILE);
+        nameSurferGraph = new NameSurferGraph();
+        this.setSize(APPLICATION_WIDTH, APPLICATION_HEIGHT);
+        this.add(new JLabel("Name"), "North");
+        textField = new JTextField(10);
+        this.add(textField, "North");
+        this.add(new JButton("Graph"), "North");
+        this.add(new JButton("Clear"), "North");
+        this.addActionListeners();
     }
 
 	/* Method: actionPerformed(e) */
@@ -33,6 +45,14 @@ public class NameSurfer extends SimpleProgram implements NameSurferConstants {
      * button actions.
      */
     public void actionPerformed(ActionEvent e) {
-        // You fill this in //
+        switch (e.getActionCommand()) {
+            case "Graph":
+                NameSurferEntry entry = dataBase.findEntry(textField.getText());
+                nameSurferGraph.addEntry(entry);
+                break;
+            case "Clear":
+                nameSurferGraph.clear();
+                break;
+        }
     }
 }
