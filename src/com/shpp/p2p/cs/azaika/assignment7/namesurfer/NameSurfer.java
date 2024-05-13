@@ -47,7 +47,7 @@ public class NameSurfer extends SimpleProgram implements NameSurferConstants {
     public void actionPerformed(ActionEvent e) {
         switch (e.getActionCommand()) {
             case "Graph":
-                NameSurferEntry entry = dataBase.findEntry(textField.getText());
+                NameSurferEntry entry = dataBase.findEntry(textField.getText().toLowerCase());
                 nameSurferGraph.addEntry(entry);
                 System.out.println("Graph: " + textField.getText());
                 System.out.println(nameSurferGraph.getElementCount());

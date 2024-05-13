@@ -13,12 +13,12 @@ import acm.graphics.*;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 public class NameSurferGraph extends GCanvas
         implements NameSurferConstants, ComponentListener {
-    HashMap<String, NameSurferEntry> entryHashMap = new HashMap<>();
-    Color[] colors = {Color.BLACK,Color.BLUE,Color.GREEN,Color.RED};
+    private final LinkedHashMap<String, NameSurferEntry> entryLinkHashMap;
+    private final Color[] colors = {Color.BLUE, Color.RED, Color.MAGENTA, Color.BLACK};
     
 
     /**
@@ -26,6 +26,7 @@ public class NameSurferGraph extends GCanvas
      */
     public NameSurferGraph() {
         addComponentListener(this);
+        this.entryLinkHashMap = new LinkedHashMap<>();
     }
 
 
@@ -33,7 +34,7 @@ public class NameSurferGraph extends GCanvas
      * Clears the list of name surfer entries stored inside this class.
      */
     public void clear() {
-        entryHashMap.clear();
+        entryLinkHashMap.clear();
         update();
     }
 	
@@ -45,7 +46,7 @@ public class NameSurferGraph extends GCanvas
      * simply stores the entry; the graph is drawn by calling update.
      */
     public void addEntry(NameSurferEntry entry) {
-        entryHashMap.put(entry.getName(), entry);
+        entryLinkHashMap.put(entry.getName(), entry);
         update();
     }
 
@@ -65,20 +66,28 @@ public class NameSurferGraph extends GCanvas
 
     private void drawEntriesGraphs() {
         int j = 0;
-        for (NameSurferEntry entry : entryHashMap.values()) {
-            for (int i = 0; i < NDECADES; i++) {
-                int x = getX(i);
-                int y = getY(entry, i);
-                GLabel label = new GLabel(entry.getName() + " " + entry.getRank(i), x, y);
+        for (NameSurferEntry entry : entryLinkHashMap.values()) {
+            for (int i = 1; i < NDECADES; i++) {
+                int x1 = getX(i - 1);
+                int y1 = getY(entry, i - 1);
+                int x2 = getX(i);
+                int y2 = getY(entry, i);
+
+                // Отримання рядка рангу для мітки
+                String rankString = entry.getRank(i) == 0 ? "*" : String.valueOf(entry.getRank(i));
+
+                // Створення мітки
+                GLabel label = new GLabel(entry.getName() + " " + rankString, x2, y2);
                 label.setColor(colors[j]);
                 add(label);
 
-                GLine line = new GLine(x, y, getX(i - 1), getY(entry, i - 1));
+                // Створення лінії графіку
+                GLine line = new GLine(x1, y1, x2, y2);
                 line.setColor(colors[j]);
                 add(line);
             }
             j++;
-            j = Math.min(j, colors.length - 1);
+            j = j == colors.length ? 0 : j;
         }
     }
 
@@ -88,14 +97,13 @@ public class NameSurferGraph extends GCanvas
 
     private int getY(NameSurferEntry entry, int i) {
         int maxY = getHeight() - GRAPH_MARGIN_SIZE;
-        int y;
-        int rank = entry.getRank(Math.max(i, 0));
-        if (rank == 0){
-            y = maxY;
-        }else if (rank > maxY){
-            y = maxY;
-        }else y = Math.max(rank, GRAPH_MARGIN_SIZE);
-        return y;
+        int rank = entry.getRank(i);
+        if (rank == 0) {
+            return maxY; // Повертаємо найнижчу точку графіку, якщо ранг рівний 0
+        } else {
+            // Масштабуємо ранг у відповідність з висотою графіку
+            return GRAPH_MARGIN_SIZE + (maxY - GRAPH_MARGIN_SIZE) * rank / MAX_RANK;
+        }
     }
 
     private void drawSheet() {

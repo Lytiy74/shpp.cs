@@ -33,7 +33,7 @@ public class NameSurferDataBase implements NameSurferConstants {
             String line;
             while ((line = br.readLine()) != null) {
                 NameSurferEntry entry = new NameSurferEntry(line);
-                entryHashMap.put(entry.getName(), entry);
+                entryHashMap.put(entry.getName().toLowerCase(), entry);
             }
         }catch (FileNotFoundException e) {
             System.out.println("File not found: " + filename);
