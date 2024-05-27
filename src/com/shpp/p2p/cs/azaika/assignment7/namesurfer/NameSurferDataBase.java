@@ -29,10 +29,13 @@ public class NameSurferDataBase implements NameSurferConstants {
      * occurs as the file is being read.
      */
     public NameSurferDataBase(String filename) {
-        try(BufferedReader br = new BufferedReader(new FileReader(filename))) {
+        try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
             String line;
+            // Read the file line by line
             while ((line = br.readLine()) != null) {
+                // Create a new NameSurferEntry for each line
                 NameSurferEntry entry = new NameSurferEntry(line);
+                // Add the entry to the hash map with the name as the key
                 entryHashMap.put(entry.getName().toLowerCase(), entry);
             }
         }catch (FileNotFoundException e) {
@@ -41,7 +44,6 @@ public class NameSurferDataBase implements NameSurferConstants {
             System.out.println("Error reading file: " + filename);
         }
         System.out.println("Loaded " + entryHashMap.size() + " names surfer.");
-        // You fill this in //
     }
 	
 	/* Method: findEntry(name) */

@@ -23,9 +23,13 @@ public class NameSurferEntry implements NameSurferConstants {
      * decade.
      */
     public NameSurferEntry(String line) {
+        // Split the input line into parts based on spaces
         String[] parts = line.split(" ");
+        // The first part is the name
         name = parts[0];
+        // Initialize the rank array to hold the rankings for each decade
         rank = new int[parts.length - 1];
+        // Populate the rank array with the integer rankings
         for (int i = 1; i < parts.length; i++) {
             rank[i - 1] = Integer.parseInt(parts[i]);
         }

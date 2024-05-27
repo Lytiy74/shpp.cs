@@ -12,7 +12,7 @@ import com.shpp.cs.a.simple.SimpleProgram;
 import java.awt.event.*;
 import javax.swing.*;
 
-public class NameSurfer extends SimpleProgram implements NameSurferConstants {
+public class NameSurfer extends SimpleProgram implements NameSurferConstants{
     private NameSurferDataBase dataBase;
     private NameSurferGraph nameSurferGraph;
     private JTextField textField;
@@ -24,18 +24,32 @@ public class NameSurfer extends SimpleProgram implements NameSurferConstants {
      * and initializing the interactors at the top of the window.
      */
     public void init() {
-        // loading db from specified file.
+        // Load the database from the specified file
         dataBase = new NameSurferDataBase(NAMES_DATA_FILE);
+        // Set the size of the application window
         this.setSize(APPLICATION_WIDTH, APPLICATION_HEIGHT);
+        // Add a label for the name input field
         this.add(new JLabel("Name"), "North");
+        // Initialize the text field for name input
         textField = new JTextField(10);
+        // Set the action command for when the enter key is pressed
+        textField.setActionCommand("EnterPressed");
+        // Add an action listener to the text field
+        textField.addActionListener(this);
+        // Add the text field to the top of the window
         this.add(textField, "North");
+        // Add a button to graph the name data
         this.add(new JButton("Graph"), "North");
+        // Add a button to clear the graph
         this.add(new JButton("Clear"), "North");
+        // Initialize the graph component
         nameSurferGraph = new NameSurferGraph();
+        // Add the graph component to the window
         this.add(nameSurferGraph);
+        // Add action listeners for the buttons
         this.addActionListeners();
     }
+
 
 	/* Method: actionPerformed(e) */
 
@@ -45,17 +59,23 @@ public class NameSurfer extends SimpleProgram implements NameSurferConstants {
      * button actions.
      */
     public void actionPerformed(ActionEvent e) {
-        switch (e.getActionCommand()) {
-            case "Graph":
-                NameSurferEntry entry = dataBase.findEntry(textField.getText().toLowerCase());
-                nameSurferGraph.addEntry(entry);
-                System.out.println("Graph: " + textField.getText());
-                System.out.println(nameSurferGraph.getElementCount());
-                break;
-            case "Clear":
-                nameSurferGraph.clear();
-                System.out.println("Clear");
-                break;
+        String actionCommand = e.getActionCommand();
+        // Check if the Graph button or Enter key was pressed
+        if (actionCommand.equals("Graph") || actionCommand.equals("EnterPressed")) {
+            // Find the entry in the database for the given name
+            System.out.println(dataBase.findEntry(textField.getText().toLowerCase().toString()));
+            NameSurferEntry entry = dataBase.findEntry(textField.getText().toLowerCase());
+            // Add the entry to the graph
+            nameSurferGraph.addEntry(entry);
+            // Print debug information to the console
+            System.out.println("Graph: " + textField.getText());
+            System.out.println(nameSurferGraph.getElementCount());
+        } else if (actionCommand.equals("Clear")) {
+            // Clear the graph
+            nameSurferGraph.clear();
+            // Print debug information to the console
+            System.out.println("Clear");
         }
     }
+
 }

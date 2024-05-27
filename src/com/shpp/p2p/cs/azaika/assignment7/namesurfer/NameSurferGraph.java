@@ -65,29 +65,34 @@ public class NameSurferGraph extends GCanvas
     }
 
     private void drawEntriesGraphs() {
-        int j = 0;
+        int colorIndex = 0; // Color index for cycling through colors array
+
+        // Iterate through each NameSurferEntry in the entryLinkHashMap
         for (NameSurferEntry entry : entryLinkHashMap.values()) {
-            for (int i = 1; i < NDECADES; i++) {
-                int x1 = getX(i - 1);
-                int y1 = getY(entry, i - 1);
+            // Draw the graph for each decade
+            for (int i = 0; i < NDECADES; i++) {
+                // Calculate the x and y coordinates for the start and end points of the line
+                int x1 = getX(Math.max(i - 1, 0));
+                int y1 = getY(entry, Math.max(i - 1, 0));
                 int x2 = getX(i);
                 int y2 = getY(entry, i);
 
-                // Отримання рядка рангу для мітки
+                // Determine the rank string to display (use "*" for rank 0)
                 String rankString = entry.getRank(i) == 0 ? "*" : String.valueOf(entry.getRank(i));
 
-                // Створення мітки
+                // Create and add a label for the name and rank at the end point of the line
                 GLabel label = new GLabel(entry.getName() + " " + rankString, x2, y2);
-                label.setColor(colors[j]);
-                add(label);
+                label.setColor(colors[colorIndex]); // Set the label color
+                add(label); // Add the label to the canvas
 
-                // Створення лінії графіку
+                // Create and add a line representing the rank from one decade to the next
                 GLine line = new GLine(x1, y1, x2, y2);
-                line.setColor(colors[j]);
-                add(line);
+                line.setColor(colors[colorIndex]); // Set the line color
+                add(line); // Add the line to the canvas
             }
-            j++;
-            j = j == colors.length ? 0 : j;
+            colorIndex++; // Move to the next color
+            // Reset the color index if it exceeds the length of the colors array
+            colorIndex = colorIndex == colors.length ? 0 : colorIndex;
         }
     }
 
@@ -99,9 +104,8 @@ public class NameSurferGraph extends GCanvas
         int maxY = getHeight() - GRAPH_MARGIN_SIZE;
         int rank = entry.getRank(i);
         if (rank == 0) {
-            return maxY; // Повертаємо найнижчу точку графіку, якщо ранг рівний 0
+            return maxY;
         } else {
-            // Масштабуємо ранг у відповідність з висотою графіку
             return GRAPH_MARGIN_SIZE + (maxY - GRAPH_MARGIN_SIZE) * rank / MAX_RANK;
         }
     }
