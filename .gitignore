@@ -40,3 +40,4 @@ build/
 pom.xml
 README.md
 target
+/src.zip
