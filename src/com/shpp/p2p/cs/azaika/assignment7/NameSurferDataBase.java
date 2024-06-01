@@ -1,4 +1,4 @@
-package com.shpp.p2p.cs.azaika.assignment7.namesurfer;
+package com.shpp.p2p.cs.azaika.assignment7;
 
 /*
  * File: NameSurferDataBase.java

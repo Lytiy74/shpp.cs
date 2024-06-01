@@ -1,4 +1,4 @@
-package com.shpp.p2p.cs.azaika.assignment7.namesurfer;
+package com.shpp.p2p.cs.azaika.assignment7;
 
 /*
  * File: NameSurfer.java
@@ -29,7 +29,7 @@ public class NameSurfer extends SimpleProgram implements NameSurferConstants{
         // Set the size of the application window
         this.setSize(APPLICATION_WIDTH, APPLICATION_HEIGHT);
         // Add a label for the name input field
-        this.add(new JLabel("Name"), "North");
+        this.add(new JLabel("Name:"), "North");
         // Initialize the text field for name input
         textField = new JTextField(10);
         // Set the action command for when the enter key is pressed
@@ -63,16 +63,19 @@ public class NameSurfer extends SimpleProgram implements NameSurferConstants{
         // Check if the Graph button or Enter key was pressed
         if (actionCommand.equals("Graph") || actionCommand.equals("EnterPressed")) {
             // Find the entry in the database for the given name
-            System.out.println(dataBase.findEntry(textField.getText().toLowerCase().toString()));
             NameSurferEntry entry = dataBase.findEntry(textField.getText().toLowerCase());
+            System.out.println(entry);
             // Add the entry to the graph
+            if(entry != null){
             nameSurferGraph.addEntry(entry);
+            nameSurferGraph.update();
             // Print debug information to the console
             System.out.println("Graph: " + textField.getText());
-            System.out.println(nameSurferGraph.getElementCount());
+            }
         } else if (actionCommand.equals("Clear")) {
             // Clear the graph
             nameSurferGraph.clear();
+            nameSurferGraph.update();
             // Print debug information to the console
             System.out.println("Clear");
         }
