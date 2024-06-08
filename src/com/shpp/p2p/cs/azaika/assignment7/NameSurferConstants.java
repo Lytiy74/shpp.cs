@@ -23,7 +23,7 @@ public interface NameSurferConstants {
     /**
      * The name of the file containing the data
      */
-    public static final String NAMES_DATA_FILE = "names-data.txt";
+    public static final String NAMES_DATA_FILE = "src/com/shpp/p2p/cs/azaika/assignment7/names-data.txt";
 
     /**
      * The first decade in the database

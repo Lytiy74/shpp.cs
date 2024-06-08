@@ -1,0 +1,6 @@
+1.In NameSurferGraph.java were reworked methods clear() and addEntry(NameSurferEntry entry)
+Now they dont call update(); now its called in NameSurfer.java in actionperformed. 
+
+2.In drawSheet() magicnumber 10 (which describes decade) replaced by constant DECADE
+
+3.Now text in textfield trims every whitespace

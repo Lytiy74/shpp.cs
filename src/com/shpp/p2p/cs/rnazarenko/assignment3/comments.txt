@@ -1,0 +1,9 @@
+part1
+1. You need to handle with invalid date
+2. Useless TAB constant
+
+part3
+1. Its better to pass result in to method parameters
+
+part6
+1. constant for anim time

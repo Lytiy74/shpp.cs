@@ -17,6 +17,7 @@ public class HistogramEqualizationLogic {
         int[] histogram = new int[MAX_LUMINANCE + 1];
         for (int i = 0; i < luminances.length; i++) {
             for (int j = 0; j < luminances[i].length; j++) {
+                // Increment the count for the corresponding luminance value in the histogram.
                 histogram[luminances[i][j]]++;
             }
         }
@@ -36,6 +37,7 @@ public class HistogramEqualizationLogic {
     public static int[] cumulativeSumFor(int[] histogram) {
         int[] cumulativeSum = new int[histogram.length];
         for (int i = 0; i < histogram.length; i++) {
+            // Calculate cumulative sum by adding current histogram value to the previous cumulative sum.
             cumulativeSum[i] = histogram[i] + cumulativeSum[i == 0 ? 0 : i - 1];
         }
         return cumulativeSum;
@@ -66,6 +68,7 @@ public class HistogramEqualizationLogic {
         int[] cumulatived = cumulativeSumFor(histogramFor(luminances));
         for (int i = 0; i < luminances.length; i++) {
             for (int j = 0; j < luminances[i].length; j++) {
+                // Calculate new luminance value based on cumulative sum and total pixels.
                 int newLuminance = MAX_LUMINANCE * cumulatived[luminances[i][j]] / totalPixelsIn(luminances);
                 result[i][j] = newLuminance;
             }

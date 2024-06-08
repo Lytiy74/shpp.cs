@@ -52,9 +52,11 @@ public class SteganographyLogic {
                 int red = GImage.getRed(pixelArray[i][j]);
                 int green = GImage.getGreen(pixelArray[i][j]);
                 int blue = GImage.getBlue(pixelArray[i][j]);
+                // If the message bit is 1 and the least significant bit of red is 0, adjust red to an odd value.
                 if (message[i][j] && (GImage.getRed(pixelArray[i][j]) % 2) == 0) {
                     red = Math.min(red + 1, 255);
                     pixelArray[i][j] = GImage.createRGBPixel(red, green, blue);
+                    // If the message bit is 0 and the least significant bit of red is 1, adjust red to an even value.
                 } else if (!message[i][j] && (GImage.getRed(pixelArray[i][j]) % 2) == 1) {
                     red = Math.max(red - 1, 0);
                     pixelArray[i][j] = GImage.createRGBPixel(red, green, blue);

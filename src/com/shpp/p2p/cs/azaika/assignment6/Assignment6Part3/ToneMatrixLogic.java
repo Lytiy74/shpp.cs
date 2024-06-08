@@ -12,7 +12,7 @@ public class ToneMatrixLogic {
      */
     public static double[] matrixToMusic(boolean[][] toneMatrix, int column, double[][] samples) {
         double[] sound = new double[ToneMatrixConstants.sampleSize()];
-        double max = Double.NEGATIVE_INFINITY;
+        double max = Double.MIN_VALUE;
 
         for (int row = 0; row < toneMatrix.length; row++) {
             if (toneMatrix[row][column]){
@@ -22,6 +22,7 @@ public class ToneMatrixLogic {
                 }
             }
         }
+        // Normalize the sound wave.
         for (int i = 0; i < sound.length; i++) {
             sound[i] /= max;
         }

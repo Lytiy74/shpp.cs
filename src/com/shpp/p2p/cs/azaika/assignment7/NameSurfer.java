@@ -63,7 +63,7 @@ public class NameSurfer extends SimpleProgram implements NameSurferConstants{
         // Check if the Graph button or Enter key was pressed
         if (actionCommand.equals("Graph") || actionCommand.equals("EnterPressed")) {
             // Find the entry in the database for the given name
-            NameSurferEntry entry = dataBase.findEntry(textField.getText().toLowerCase());
+            NameSurferEntry entry = dataBase.findEntry(textField.getText().toLowerCase().trim());
             System.out.println(entry);
             // Add the entry to the graph
             if(entry != null){
