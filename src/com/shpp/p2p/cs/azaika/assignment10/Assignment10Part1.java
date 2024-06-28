@@ -70,8 +70,15 @@ public class Assignment10Part1 {
         char[] chars = formula.toCharArray();
         for (char c : chars) {
             switch (c) {
-                case '^', '/', '*': {
+                case '(', '^', '/', '*': {
                     operatorStack.add(c);
+                    break;
+                }
+                case ')': {
+                    while (operatorStack.peek()!= '(') {
+                        outQueue.add(operatorStack.pop());
+                    }
+                    operatorStack.pop(); // Discard the '('
                     break;
                 }
                 case '+', '-': {
