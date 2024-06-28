@@ -2,6 +2,7 @@ package com.shpp.p2p.cs.azaika.assignment10;
 
 
 import java.util.LinkedList;
+
 import java.util.Queue;
 import java.util.Stack;
 import java.util.regex.Matcher;
@@ -15,7 +16,7 @@ public class Assignment10Part1 {
         }
         Queue<Character> postfix = evaluatePostfix(formula);
         System.out.println(postfix);
-        int calculationResult = calculatePostfix(postfix);
+        double calculationResult = calculatePostfix(postfix);
         System.out.println(calculationResult);
     }
 
@@ -31,25 +32,25 @@ public class Assignment10Part1 {
         return formula;
     }
 
-    private static int calculatePostfix(Queue<Character> postfix) {
-        Stack<Integer> operandStack = new Stack<>();
+    private static double calculatePostfix(Queue<Character> postfix) {
+        Stack<Double> operandStack = new Stack<>();
         boolean prefixNegative = false;
         for (Character c : postfix) {
             switch (c) {
                 case '^', '*', '/', '+', '-': {
                     if (operandStack.size() >= 2) {
-                        int v2 = operandStack.pop();
-                        int v1 = operandStack.pop();
+                        double v2 = operandStack.pop();
+                        double v1 = operandStack.pop();
                         operandStack.add(calculateOperation(v1, v2, c));
                     } else if (operandStack.size() == 1 && c == '-') {
-                        int v1 = operandStack.pop();
+                        double v1 = operandStack.pop();
                         operandStack.add(-v1);
                     }
                     break;
                 }
                 default: {
                     if (Character.isDigit(c)) {
-                        operandStack.add(Character.getNumericValue(c));
+                        operandStack.add((double) Character.getNumericValue(c));
                     } else {
                         throw new IllegalArgumentException();
                     }
@@ -59,9 +60,9 @@ public class Assignment10Part1 {
         return operandStack.pop();
     }
 
-    private static Integer calculateOperation(int v1, int v2, Character c) {
+    private static double calculateOperation(double v1, double v2, Character c) {
         return switch (c) {
-            case '^' -> (int) Math.pow(v1, v2);
+            case '^' -> Math.pow(v1, v2);
             case '*' -> v1 * v2;
             case '/' -> v1 / v2;
             case '+' -> v1 + v2;
@@ -74,9 +75,14 @@ public class Assignment10Part1 {
         Queue<Character> outQueue = new LinkedList<>();
         Stack<Character> operatorStack = new Stack<>();
         boolean expectNumber = true;
+        boolean expectDouble = false;
+        int numbersAfterComma = 1;
         char[] chars = formula.toCharArray();
         for (char c : chars) {
             switch (c) {
+                case ',','.':{
+                    break;
+                }
                 case '(', '^', '/', '*': {
                     operatorStack.add(c);
                     expectNumber = true;
