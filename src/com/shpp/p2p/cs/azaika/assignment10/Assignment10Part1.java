@@ -33,12 +33,18 @@ public class Assignment10Part1 {
 
     private static int calculatePostfix(Queue<Character> postfix) {
         Stack<Integer> operandStack = new Stack<>();
+        boolean prefixNegative = false;
         for (Character c : postfix) {
             switch (c) {
                 case '^', '*', '/', '+', '-': {
-                    int v2 = operandStack.pop();
-                    int v1 = operandStack.pop();
-                    operandStack.add(calculateOperation(v1, v2, c));
+                    if (operandStack.size() >= 2) {
+                        int v2 = operandStack.pop();
+                        int v1 = operandStack.pop();
+                        operandStack.add(calculateOperation(v1, v2, c));
+                    } else if (operandStack.size() == 1 && c == '-') {
+                        int v1 = operandStack.pop();
+                        operandStack.add(-v1);
+                    }
                     break;
                 }
                 default: {
@@ -67,11 +73,13 @@ public class Assignment10Part1 {
     private static Queue<Character> evaluatePostfix(String formula) {
         Queue<Character> outQueue = new LinkedList<>();
         Stack<Character> operatorStack = new Stack<>();
+        boolean expectNumber = true;
         char[] chars = formula.toCharArray();
         for (char c : chars) {
             switch (c) {
                 case '(', '^', '/', '*': {
                     operatorStack.add(c);
+                    expectNumber = true;
                     break;
                 }
                 case ')': {
@@ -79,6 +87,7 @@ public class Assignment10Part1 {
                         outQueue.add(operatorStack.pop());
                     }
                     operatorStack.pop(); // Discard the '('
+                    expectNumber = false;
                     break;
                 }
                 case '+', '-': {
@@ -86,13 +95,20 @@ public class Assignment10Part1 {
                         while (!operatorStack.isEmpty() && (operatorStack.peek().equals('*') || operatorStack.peek().equals('/') || operatorStack.peek().equals('^'))) {
                             outQueue.add(operatorStack.pop());
                         }
+                    } else if (c == '-' && expectNumber){
+                        outQueue.add('0');
+                        operatorStack.add('-');
+                        expectNumber = false;
+                        break;
                     }
                     operatorStack.add(c);
+                    expectNumber = true;
                     break;
                 }
                 default: {
                     if (Character.isDigit(c)) {
                         outQueue.add(c);
+                        expectNumber = false;
                     } else {
                         throw new IllegalArgumentException();
                     }
