@@ -30,7 +30,7 @@ public class Assignment10Part1 {
  */
 private static String replaceVariables(String formula, String[] args) {
     // Create a pattern to match variable assignments in the form "variable = value"
-    Pattern pattern = Pattern.compile("([a-z])+\\s*=\\s*(\\d([.]\\d)*)+");
+    Pattern pattern = Pattern.compile("([a-z])+\\s*=\\s*((-)*\\d([.]\\d)*)+");
 
     // Iterate through the command-line arguments starting from the second one
     for (int i = 1; i < args.length; i++) {
