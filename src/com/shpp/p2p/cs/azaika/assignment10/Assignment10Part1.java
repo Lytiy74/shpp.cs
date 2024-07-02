@@ -10,14 +10,18 @@ import java.util.regex.Pattern;
 
 public class Assignment10Part1 {
     public static void main(String[] args) {
-        String formula = args[0].replaceAll(" ", "");
-        if (args.length > 1) {
-            formula = replaceVariables(formula, args);
+        try {
+            String formula = args[0].replaceAll(" ", "");
+            if (args.length > 1) {
+                formula = replaceVariables(formula, args);
+            }
+            Queue<String> postfix = evaluatePostfix(formula);
+            System.out.println(postfix);
+            double calculationResult = calculatePostfix(postfix);
+            System.out.println(calculationResult);
+        }catch (IllegalArgumentException e){
+            System.out.println(e.getMessage());
         }
-        Queue<String> postfix = evaluatePostfix(formula);
-        System.out.println(postfix);
-        double calculationResult = calculatePostfix(postfix);
-        System.out.println(calculationResult);
     }
 
 
@@ -102,7 +106,7 @@ private static double calculateOperation(double v1, double v2, Character c) {
         case '/' -> v1 / v2; // Divide v1 by v2
         case '+' -> v1 + v2; // Add v1 and v2
         case '-' -> v1 - v2; // Subtract v2 from v1
-        default -> throw new IllegalArgumentException(); // Throw an exception if the operator is not valid
+        default -> throw new IllegalArgumentException("Invalid operator in formula"); // Throw an exception if the operator is not valid
     };
 }
 
