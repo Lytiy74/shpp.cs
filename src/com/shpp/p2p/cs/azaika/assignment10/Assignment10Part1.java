@@ -20,7 +20,7 @@ public class Assignment10Part1 {
                 formula = replaceVariables(formula, args);
             }
 
-            Queue<String> postfix = evaluatePostfix(formula);
+            Queue<String> postfix = makePostfix(formula);
             System.out.println(postfix);
             double calculationResult = calculatePostfix(postfix);
             System.out.println(calculationResult);
@@ -40,7 +40,7 @@ public class Assignment10Part1 {
      */
     private static String replaceVariables(String formula, String[] args) {
         // Create a pattern to match variable assignments in the form "variable = value"
-        Pattern pattern = Pattern.compile("([a-z])+\\s*=\\s*((-)*\\d+([.]\\d)*)+");
+        Pattern pattern = Pattern.compile("([a-z])+\\s*=\\s*((-{1}){0,1}(\\d+)((.{1})\\d+){0,1}((\\^{0,1})(-{0,1})\\d+))");
 
         // Iterate through the command-line arguments starting from the second one
         for (int i = 1; i < args.length; i++) {
@@ -118,13 +118,13 @@ public class Assignment10Part1 {
     }
 
     /**
-     * This method evaluates a given infix mathematical formula and converts it to postfix notation.
+     * This method makes from a given infix mathematical formula and converts it to postfix notation.
      *
      * @param formula The infix mathematical formula as a string.
      * @return The postfix notation of the formula as a queue of characters.
      * @throws IllegalArgumentException If the formula contains an invalid character.
      */
-    private static Queue<String> evaluatePostfix(String formula) {
+    private static Queue<String> makePostfix(String formula) {
         // Queue to store the postfix notation
         Queue<String> outQueue = new LinkedList<>();
 
@@ -156,7 +156,8 @@ public class Assignment10Part1 {
                 if (c == '(') {
                     operatorStack.add(c);
                 }
-                // If the character is a closing parenthesis, pop operators from the stack and add them to the output queue until an opening parenthesis is encountered
+                // If the character is a closing parenthesis, pop operators from the stack
+                // and add them to the output queue until an opening parenthesis is encountered
                 else if (c == ')') {
                     while (!operatorStack.isEmpty() && operatorStack.peek() != '(') {
                         outQueue.add(String.valueOf(operatorStack.pop()));
@@ -164,7 +165,8 @@ public class Assignment10Part1 {
                     // Pop the opening parenthesis from the stack
                     operatorStack.pop();
                 }
-                // If the character is an operator, pop operators from the stack and add them to the output queue until an operator with lower precedence is encountered or the stack is empty
+                // If the character is an operator, pop operators from the stack
+                // and add them to the output queue until an operator with lower precedence is encountered or the stack is empty
                 else if (c == '+' || c == '-' || c == '*' || c == '/' || c == '^') {
                     while (!operatorStack.isEmpty() && precedence(operatorStack.peek()) >= precedence(c)) {
                         outQueue.add(String.valueOf(operatorStack.pop()));
