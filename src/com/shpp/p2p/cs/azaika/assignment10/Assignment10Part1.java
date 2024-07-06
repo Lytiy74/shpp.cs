@@ -142,6 +142,7 @@ public class Assignment10Part1 {
             if (Character.isDigit(c) || c == '.' || (c == '-' && expectNumber)) {
                 number.append(c);
                 expectNumber = false;
+                continue;
             }
             // If the number is not empty, add it to the output queue and clear the number
             if (!number.isEmpty()) {
@@ -155,7 +156,7 @@ public class Assignment10Part1 {
             }
             // If the character is a closing parenthesis, pop operators from the stack
             // and add them to the output queue until an opening parenthesis is encountered
-            else if (c == ')') {
+            if (c == ')') {
                 while (!operatorStack.isEmpty() && operatorStack.peek() != '(') {
                     outQueue.add(String.valueOf(operatorStack.pop()));
                 }
@@ -164,7 +165,7 @@ public class Assignment10Part1 {
             }
             // If the character is an operator, pop operators from the stack
             // and add them to the output queue until an operator with lower precedence is encountered or the stack is empty
-            else if (c == '+' || c == '-' || c == '*' || c == '/' || c == '^') {
+            if (c == '+' || c == '-' || c == '*' || c == '/' || c == '^') {
                 while (!operatorStack.isEmpty() && precedence(operatorStack.peek(), c)) {
                     outQueue.add(String.valueOf(operatorStack.pop()));
                 }
