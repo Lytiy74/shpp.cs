@@ -10,15 +10,12 @@ import java.util.regex.Pattern;
 
 public class Assignment10Part1 {
     public static void main(String[] args) {
-
         try {
             if (args.length == 0) throw new IllegalArgumentException("No arguments passed");
 
             String formula = args[0].replaceAll(" ", "");
 
-            if (args.length > 1) {
-                formula = replaceVariables(formula, args);
-            }
+            if (args.length > 1) formula = replaceVariables(formula, args);
 
             Queue<String> postfix = makePostfix(formula);
             System.out.println(postfix);
@@ -40,7 +37,7 @@ public class Assignment10Part1 {
      */
     private static String replaceVariables(String formula, String[] args) {
         // Create a pattern to match variable assignments in the form "variable = value"
-        Pattern pattern = Pattern.compile("([a-z])+\\s*=\\s*((-{1}){0,1}(\\d+)((.{1})\\d+){0,1}((\\^{0,1})(-{0,1})\\d+))");
+        Pattern pattern = Pattern.compile("([a-z])+\\s*=\\s*((-{1}){0,1}(\\d+)*((.{1})\\d+){0,1}((\\^{0,1})(-{0,1})\\d+))");
 
         // Iterate through the command-line arguments starting from the second one
         for (int i = 1; i < args.length; i++) {
@@ -145,40 +142,38 @@ public class Assignment10Part1 {
             if (Character.isDigit(c) || c == '.' || (c == '-' && expectNumber)) {
                 number.append(c);
                 expectNumber = false;
-            } else {
-                // If the number is not empty, add it to the output queue and clear the number
-                if (!number.isEmpty()) {
-                    outQueue.add(number.toString());
-                    number.setLength(0);
-                }
+            }
+            // If the number is not empty, add it to the output queue and clear the number
+            if (!number.isEmpty()) {
+                outQueue.add(number.toString());
+                number.setLength(0);
+            }
 
-                // If the character is an opening parenthesis, push it onto the operator stack
-                if (c == '(') {
-                    operatorStack.add(c);
+            // If the character is an opening parenthesis, push it onto the operator stack
+            if (c == '(') {
+                operatorStack.add(c);
+            }
+            // If the character is a closing parenthesis, pop operators from the stack
+            // and add them to the output queue until an opening parenthesis is encountered
+            else if (c == ')') {
+                while (!operatorStack.isEmpty() && operatorStack.peek() != '(') {
+                    outQueue.add(String.valueOf(operatorStack.pop()));
                 }
-                // If the character is a closing parenthesis, pop operators from the stack
-                // and add them to the output queue until an opening parenthesis is encountered
-                else if (c == ')') {
-                    while (!operatorStack.isEmpty() && operatorStack.peek() != '(') {
-                        outQueue.add(String.valueOf(operatorStack.pop()));
-                    }
-                    // Pop the opening parenthesis from the stack
-                    operatorStack.pop();
+                // Pop the opening parenthesis from the stack
+                operatorStack.pop();
+            }
+            // If the character is an operator, pop operators from the stack
+            // and add them to the output queue until an operator with lower precedence is encountered or the stack is empty
+            else if (c == '+' || c == '-' || c == '*' || c == '/' || c == '^') {
+                while (!operatorStack.isEmpty() && precedence(operatorStack.peek(), c)) {
+                    outQueue.add(String.valueOf(operatorStack.pop()));
                 }
-                // If the character is an operator, pop operators from the stack
-                // and add them to the output queue until an operator with lower precedence is encountered or the stack is empty
-                else if (c == '+' || c == '-' || c == '*' || c == '/' || c == '^') {
-                    while (!operatorStack.isEmpty() && precedence(operatorStack.peek()) >= precedence(c)) {
-                        outQueue.add(String.valueOf(operatorStack.pop()));
-                    }
-                    // Push the current operator onto the stack
-                    operatorStack.add(c);
-                    expectNumber = true;
-                }
-                // If the character is an invalid character, throw an IllegalArgumentException
-                else {
-                    throw new IllegalArgumentException("Invalid character: " + c);
-                }
+                operatorStack.add(c);
+                expectNumber = true;
+            }
+            // If the character is an invalid character, throw an IllegalArgumentException
+            else {
+                throw new IllegalArgumentException("Invalid character: " + c);
             }
         }
 
@@ -194,6 +189,25 @@ public class Assignment10Part1 {
 
         // Return the postfix notation of the formula
         return outQueue;
+    }
+
+    /**
+     * This method checks the precedence of two operators.
+     *
+     * @param top     The operator on the top of the stack.
+     * @param current The current operator being processed.
+     * @return True if the precedence of the top operator is greater than or equal to the current operator.
+     * False if the precedence of the top operator is less than the current operator, or if the current operator is right associative '^'.
+     */
+    private static boolean precedence(char top, char current) {
+        // If both operators are '^' (right associative), return false
+        if (top == '^' && current == '^') {
+            return false;
+        }
+        // Compare the precedence of the top operator with the current operator
+        // Return true if the precedence of the top operator is greater than or equal to the current operator
+        // Return false otherwise
+        return precedence(top) >= precedence(current);
     }
 
     private static int precedence(char operator) {
