@@ -1,7 +1,6 @@
 package com.shpp.p2p.cs.azaika.assignment10;
 
 
-import java.util.HashMap;
 import java.util.LinkedList;
 
 import java.util.Queue;
@@ -12,16 +11,15 @@ import java.util.regex.Pattern;
 public class Assignment10Part1 {
     public static void main(String[] args) {
         try {
-            HashMap<String,Double> variables = new HashMap<>();
             if (args.length == 0) throw new IllegalArgumentException("No arguments passed");
 
             String formula = args[0].replaceAll(" ", "");
 
-            if (args.length > 1)  variables = replaceVariables(args);
+            if (args.length > 1) formula = replaceVariables(formula, args);
 
             Queue<String> postfix = makePostfix(formula);
             System.out.println(postfix);
-            double calculationResult = calculatePostfix(postfix, variables);
+            double calculationResult = calculatePostfix(postfix);
             System.out.println(calculationResult);
 
         } catch (IllegalArgumentException e) {
@@ -33,23 +31,27 @@ public class Assignment10Part1 {
     /**
      * This method replaces variables in the given formula with their corresponding values.
      *
+     * @param formula The original formula string.
      * @param args    The command-line arguments.
      * @return The formula string with variables replaced by their values.
      */
-    private static HashMap replaceVariables(String[] args) {
+    private static String replaceVariables(String formula, String[] args) {
         // Create a pattern to match variable assignments in the form "variable = value"
-        HashMap<String, Double> variablesMap = new HashMap<>();
-        Pattern pattern = Pattern.compile("(?<variableName>[a-z])+\\s*=\\s*(?<variableValue>(?>-{1})?(\\d+)*((.{1})\\d+)?((\\^?)(-?)\\d+))");
-        for (String arg : args) {
-            Matcher matcher = pattern.matcher(arg);
-            while (matcher.find()){
-                double variableValue = calculatePostfix(makePostfix(matcher.group("variableValue")));
-                variablesMap.put(matcher.group("variableName"), variableValue);
+        Pattern pattern = Pattern.compile("([a-z])+\\s*=\\s*((-{1}){0,1}(\\d+)*((.{1})\\d+){0,1}((\\^{0,1})(-{0,1})\\d+))");
+
+        // Iterate through the command-line arguments starting from the second one
+        for (int i = 1; i < args.length; i++) {
+            // Create a matcher for the current argument
+            Matcher matcher = pattern.matcher(args[i]);
+
+            // If the argument matches the pattern, replace the variable in the formula with its value
+            if (matcher.matches()) {
+                formula = formula.replaceAll(matcher.group(1), matcher.group(2));
             }
         }
 
         // Return the formula string with variables replaced by their values
-        return variablesMap;
+        return formula;
     }
 
     /**
@@ -59,49 +61,37 @@ public class Assignment10Part1 {
      * @return The result of the postfix expression as a double.
      * @throws IllegalArgumentException If the postfix expression contains an invalid character.
      */
-    private static double calculatePostfix(Queue<String> postfix, HashMap<String, Double> variables) {
+    private static double calculatePostfix(Queue<String> postfix) {
+        // Create a stack to store operands
         Stack<Double> operandStack = new Stack<>();
 
+        // Iterate through the postfix expression
         for (String token : postfix) {
-            if (variables.containsKey(token)) token = variables.get(token).toString();
             switch (token) {
-                case "^", "*", "/", "+", "-" -> {
+                case "^", "*", "/", "+", "-": {
+                    // If there are at least two operands on the stack, perform the operation
                     if (operandStack.size() >= 2) {
                         double v2 = operandStack.pop();
                         double v1 = operandStack.pop();
                         operandStack.add(calculateOperation(v1, v2, token.charAt(0)));
-                    } else if (operandStack.size() == 1 && token.equals("-")) {
+                    }
+                    // If there is only one operand and the operation is unary minus, negate the operand
+                    else if (operandStack.size() == 1 && token.equals("-")) {
                         double v1 = operandStack.pop();
                         operandStack.add(-v1);
                     }
+                    break;
                 }
-                case "sin", "cos" -> {
-                    if (operandStack.size() >= 1) {
-                        double v = operandStack.pop();
-                        operandStack.add(calculateFunction(v, token));
-                    }
-                }
-                default -> {
+                default: {
+                    // If the character is a digit, push it onto the stack
                     operandStack.add(Double.parseDouble(token));
                 }
             }
         }
 
+        // After processing the entire postfix expression, the result should be on the top of the stack
         return operandStack.pop();
     }
-
-    private static double calculateFunction(double v, String function) {
-        return switch (function) {
-            case "sin" -> Math.sin(v);
-            case "cos" -> Math.cos(v);
-            default -> throw new IllegalArgumentException("Unsupported function: " + function);
-        };
-    }
-
-    private static double calculatePostfix(Queue<String> postfix){
-        return calculatePostfix(postfix, new HashMap<>());
-    }
-
 
     /**
      * This method performs a mathematical operation on two operands based on the given operator.
@@ -132,72 +122,75 @@ public class Assignment10Part1 {
      * @throws IllegalArgumentException If the formula contains an invalid character.
      */
     private static Queue<String> makePostfix(String formula) {
+        // Queue to store the postfix notation
         Queue<String> outQueue = new LinkedList<>();
-        Stack<String> operatorStack = new Stack<>();
-        StringBuilder number = new StringBuilder();
-        StringBuilder function = new StringBuilder();
 
+        // Stack to store operators
+        Stack<Character> operatorStack = new Stack<>();
+
+        // StringBuilder to build numbers from digits
+        StringBuilder number = new StringBuilder();
+
+        // Convert the formula string to a character array
         char[] chars = formula.toCharArray();
+
         boolean expectNumber = true;
 
+        // Iterate through each character in the formula
         for (char c : chars) {
-            if (Character.isLetter(c)) {
-                function.append(c);
-                continue;
-            }
-
-            if (!function.isEmpty() && (Character.isDigit(c) || c == '(')) {
-                operatorStack.push(function.toString());
-                function.setLength(0);
-            }
-
+            // If the character is a digit or a decimal point, append it to the number
             if (Character.isDigit(c) || c == '.' || (c == '-' && expectNumber)) {
                 number.append(c);
                 expectNumber = false;
                 continue;
             }
-
+            // If the number is not empty, add it to the output queue and clear the number
             if (!number.isEmpty()) {
                 outQueue.add(number.toString());
                 number.setLength(0);
             }
 
+            // If the character is an opening parenthesis, push it onto the operator stack
             if (c == '(') {
-                operatorStack.push(String.valueOf(c));
-            } else if (c == ')') {
-                while (!operatorStack.isEmpty() && !operatorStack.peek().equals("(")) {
-                    outQueue.add(operatorStack.pop());
+                operatorStack.add(c);
+            }
+            // If the character is a closing parenthesis, pop operators from the stack
+            // and add them to the output queue until an opening parenthesis is encountered
+            if (c == ')') {
+                while (!operatorStack.isEmpty() && operatorStack.peek() != '(') {
+                    outQueue.add(String.valueOf(operatorStack.pop()));
                 }
+                // Pop the opening parenthesis from the stack
                 operatorStack.pop();
-                if (!operatorStack.isEmpty() && isFunction(operatorStack.peek())) {
-                    outQueue.add(operatorStack.pop());
+            }
+            // If the character is an operator, pop operators from the stack
+            // and add them to the output queue until an operator with lower precedence is encountered or the stack is empty
+            if (c == '+' || c == '-' || c == '*' || c == '/' || c == '^') {
+                while (!operatorStack.isEmpty() && precedence(operatorStack.peek(), c)) {
+                    outQueue.add(String.valueOf(operatorStack.pop()));
                 }
-            } else if (c == '+' || c == '-' || c == '*' || c == '/' || c == '^') {
-                while (!operatorStack.isEmpty() && precedence(operatorStack.peek().charAt(0), c)) {
-                    outQueue.add(operatorStack.pop());
-                }
-                operatorStack.push(String.valueOf(c));
+                operatorStack.add(c);
                 expectNumber = true;
-            } else {
+            }
+            // If the character is an invalid character, throw an IllegalArgumentException
+            else {
                 throw new IllegalArgumentException("Invalid character: " + c);
             }
         }
 
+        // If the number is not empty, add it to the output queue
         if (!number.isEmpty()) {
             outQueue.add(number.toString());
         }
 
+        // Pop any remaining operators from the stack and add them to the output queue
         while (!operatorStack.isEmpty()) {
-            outQueue.add(operatorStack.pop());
+            outQueue.add(String.valueOf(operatorStack.pop()));
         }
 
+        // Return the postfix notation of the formula
         return outQueue;
     }
-
-    private static boolean isFunction(String token) {
-        return token.equals("sin") || token.equals("cos");
-    }
-
 
     /**
      * This method checks the precedence of two operators.
