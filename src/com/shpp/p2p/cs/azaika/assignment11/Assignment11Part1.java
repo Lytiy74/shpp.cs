@@ -38,7 +38,7 @@ public class Assignment11Part1 {
     private static HashMap<String, Double> replaceVariables(String[] args) {
         // Create a pattern to match variable assignments in the form "variable = value"
         HashMap<String, Double> variablesMap = new HashMap<>();
-        Pattern pattern = Pattern.compile("(?<variableName>[a-z]+)\\s*=\\s*(?<variableValue>(?>-)?(\\d+)*((\\.\\d*)?)((\\^?)(-?)\\d+))");
+        Pattern pattern = Pattern.compile("(?<variableName>[a-z]+)\\s*=\\s*(?<variableValue>-?\\d+(\\.\\d*)?(\\^?-?\\d+)*)");
 
         for (int i = 1, argsLength = args.length; i < argsLength; i++) {
             String arg = args[i];

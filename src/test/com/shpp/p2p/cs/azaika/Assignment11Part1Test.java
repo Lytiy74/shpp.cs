@@ -1,6 +1,6 @@
-package test.com.shpp.p2p.cs.azaika;
+package com.shpp.p2p.cs.azaika;
 
-import com.shpp.p2p.cs.azaika.assignment10.Assignment10Part1;
+import com.shpp.p2p.cs.azaika.assignment11.Assignment11Part1;
 import org.junit.jupiter.api.*;
 
 import java.io.ByteArrayOutputStream;
@@ -11,12 +11,13 @@ import java.util.Queue;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+
 public class Assignment11Part1Test {
     @Test
     public void testInvalidCharacter() {
         String[] args = {"2+a*3"};
         try {
-            Assignment10Part1.main(args);
+            Assignment11Part1.main(args);
             fail("Expected an IllegalArgumentException");
         } catch (IllegalArgumentException e) {
             assertEquals("Invalid character: a", e.getMessage());
@@ -27,7 +28,7 @@ public class Assignment11Part1Test {
     public void testMultipleInvalidCharacters() {
         String[] args = {"2+@#*3"};
         try {
-            Assignment10Part1.main(args);
+            Assignment11Part1.main(args);
             fail("Expected an IllegalArgumentException");
         } catch (IllegalArgumentException e) {
             assertEquals("Invalid character: @", e.getMessage());
@@ -38,7 +39,7 @@ public class Assignment11Part1Test {
     public void testInvalidCharacterAtBeginning() {
         String[] args = {"%2+3"};
         try {
-            Assignment10Part1.main(args);
+            Assignment11Part1.main(args);
             fail("Expected an IllegalArgumentException");
         } catch (IllegalArgumentException e) {
             assertEquals("Invalid character: %", e.getMessage());
@@ -49,7 +50,7 @@ public class Assignment11Part1Test {
     public void testInvalidCharacterAtEnd() {
         String[] args = {"2+3$"};
         try {
-            Assignment10Part1.main(args);
+            Assignment11Part1.main(args);
             fail("Expected an IllegalArgumentException");
         } catch (IllegalArgumentException e) {
             assertEquals("Invalid character: $", e.getMessage());
@@ -95,7 +96,7 @@ public class Assignment11Part1Test {
     @Test
     public void testInvalidVariable() {
         String[] args = {"a + b", "a = 2", "b = notANumber"};
-        assertThrows(IllegalArgumentException.class, () -> Assignment10Part1.main(args));
+        assertThrows(IllegalArgumentException.class, () -> Assignment11Part1.main(args));
     }
 
     @Test
@@ -111,7 +112,7 @@ public class Assignment11Part1Test {
         ByteArrayOutputStream outContent = new ByteArrayOutputStream();
         System.setOut(new PrintStream(outContent));
 
-        Assignment10Part1.main(args);
+        Assignment11Part1.main(args);
 
         String[] outputLines = outContent.toString().split("\n");
         String actualPostfix = outputLines[0].trim();
