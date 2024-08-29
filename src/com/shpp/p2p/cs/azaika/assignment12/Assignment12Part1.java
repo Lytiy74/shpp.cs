@@ -15,7 +15,7 @@ public class Assignment12Part1 {
         grayImage.saveImage("C:\\Users\\User\\IdeaProjects\\ExcelProcess\\shpp.cs\\src\\com\\shpp\\p2p\\cs\\azaika\\assignment12\\grayscale.png");
 
         // Бінаризація зображення
-        int[][] binarizedPixels = findSilhouettes(grayImage);
+        int[][] binarizedPixels = process(grayImage);
         GImage binarizedImage = new GImage(binarizedPixels);
         binarizedImage.saveImage("C:\\Users\\User\\IdeaProjects\\ExcelProcess\\shpp.cs\\src\\com\\shpp\\p2p\\cs\\azaika\\assignment12\\binarized.png");
 
@@ -29,9 +29,31 @@ public class Assignment12Part1 {
         GImage closedImage = new GImage(closedPixels);
         closedImage.saveImage("C:\\Users\\User\\IdeaProjects\\ExcelProcess\\shpp.cs\\src\\com\\shpp\\p2p\\cs\\azaika\\assignment12\\closed.png");
 
+        getAmountOfSilhuettes(binarizedPixels);
     }
 
-    private static int[][] findSilhouettes(GImage image) {
+    private static void getAmountOfSilhuettes(int[][] closedPixels) {
+        Graph graph = new Graph(closedPixels.length * closedPixels[0].length);
+        for (int y = 0; y < closedPixels.length; y++) {
+            for (int x = 0; x < closedPixels[y].length; x++) {
+                if (closedPixels[y][x] == 1) {
+                    Pixel pixel = new Pixel(x, y, closedPixels[y][x]);
+                    graph.addVertex(pixel);
+                }
+            }
+        }
+
+        for (Pixel p1 : graph.getNodes().keySet()){
+            for (Pixel p2 : graph.getNodes().keySet()){
+                if (p1 != p2 && p1.isNeighbor(p2)){
+                    graph.addEdge(p1,p2);
+                }
+            }
+        }
+        graph.printGraph();
+    }
+
+    private static int[][] process(GImage image) {
         int[][] pixels = image.getPixelArray();
         int[] histogram = histogramFor(pixels);
         return thresHoldImage(pixels, histogram);
@@ -93,7 +115,7 @@ public class Assignment12Part1 {
         for (int i = 0; i < height; i++) {
             for (int j = 0; j < width; j++) {
                 int grayValue = GImage.getRed(pixels[i][j]); // Отримання значення яскравості
-                binarized[i][j] = grayValue > threshold ? GImage.createRGBPixel(MAX_LUMINANCE, MAX_LUMINANCE, MAX_LUMINANCE) : GImage.createRGBPixel(0, 0, 0);
+                binarized[i][j] = grayValue > threshold ? 0 : 1;
             }
         }
 
