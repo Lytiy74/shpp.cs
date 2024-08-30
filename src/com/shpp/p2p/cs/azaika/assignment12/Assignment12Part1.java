@@ -50,7 +50,7 @@ public class Assignment12Part1 {
             }
         }
         GImage checkImage = new GImage(check);
-        checkImage.saveImage("C:\\Users\\User\\IdeaProjects\\ExcelProcess\\shpp.cs\\src\\com\\shpp\\p2p\\cs\\azaika\\assignment12\\checked.png");
+        checkImage.saveImage("src/com/shpp/p2p/cs/azaika/assignment12/checked.png");
         return count;
     }
 
