@@ -11,11 +11,11 @@ public class Assignment12Part1 {
     private static final int MAX_LUMINANCE = 255;
 
     public static void main(String[] args) {
-        GImage image = new GImage("C:\\Users\\User\\IdeaProjects\\ExcelProcess\\shpp.cs\\src\\com\\shpp\\p2p\\cs\\azaika\\assignment12\\image.png");
+        GImage image = new GImage("src/com/shpp/p2p/cs/azaika/assignment12/image.png");
 
         int[][] grayScalePixels = grayScaleImage(image);
         GImage grayImage = new GImage(grayScalePixels);
-        grayImage.saveImage("C:\\Users\\User\\IdeaProjects\\ExcelProcess\\shpp.cs\\src\\com\\shpp\\p2p\\cs\\azaika\\assignment12\\grayscale.png");
+        grayImage.saveImage("src/com/shpp/p2p/cs/azaika/assignment12/grayscale.png");
 
         int[][] binarizedPixels = process(grayImage);
 
