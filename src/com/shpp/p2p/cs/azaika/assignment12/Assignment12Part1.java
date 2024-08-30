@@ -2,87 +2,125 @@ package com.shpp.p2p.cs.azaika.assignment12;
 
 import acm.graphics.GImage;
 
+/**
+ * This class contains the main method and several helper methods for image processing.
+ * The main method reads an image, converts it to grayscale, applies thresholding,
+ * and performs morphological operations (opening and closing) to count the number of silhouettes.
+ */
 public class Assignment12Part1 {
     private static final int MAX_LUMINANCE = 255;
 
     public static void main(String[] args) {
-        // Завантаження зображення
         GImage image = new GImage("C:\\Users\\User\\IdeaProjects\\ExcelProcess\\shpp.cs\\src\\com\\shpp\\p2p\\cs\\azaika\\assignment12\\image.png");
 
-        // Перетворення зображення у градації сірого
         int[][] grayScalePixels = grayScaleImage(image);
         GImage grayImage = new GImage(grayScalePixels);
         grayImage.saveImage("C:\\Users\\User\\IdeaProjects\\ExcelProcess\\shpp.cs\\src\\com\\shpp\\p2p\\cs\\azaika\\assignment12\\grayscale.png");
 
-        // Бінаризація зображення
         int[][] binarizedPixels = process(grayImage);
-        GImage binarizedImage = new GImage(binarizedPixels);
-        binarizedImage.saveImage("C:\\Users\\User\\IdeaProjects\\ExcelProcess\\shpp.cs\\src\\com\\shpp\\p2p\\cs\\azaika\\assignment12\\binarized.png");
 
-        // Відкриття
-        int[][] openedPixels = open(binarizedPixels, 7);
-        GImage openedImage = new GImage(openedPixels);
-        openedImage.saveImage("C:\\Users\\User\\IdeaProjects\\ExcelProcess\\shpp.cs\\src\\com\\shpp\\p2p\\cs\\azaika\\assignment12\\opened.png");
+        int[][] openedPixelsBin = open(binarizedPixels, 7);
+        int[][] closedPixelsBin = close(openedPixelsBin, 7);
 
-        // Закриття
-        int[][] closedPixels = close(openedPixels, 7);
-        GImage closedImage = new GImage(closedPixels);
-        closedImage.saveImage("C:\\Users\\User\\IdeaProjects\\ExcelProcess\\shpp.cs\\src\\com\\shpp\\p2p\\cs\\azaika\\assignment12\\closed.png");
-
-        getAmountOfSilhuettes(binarizedPixels);
+        System.out.println(getAmountOfSilhuettes(closedPixelsBin));
     }
 
-    private static void getAmountOfSilhuettes(int[][] closedPixels) {
-        Graph graph = new Graph(closedPixels.length * closedPixels[0].length);
-        for (int y = 0; y < closedPixels.length; y++) {
-            for (int x = 0; x < closedPixels[y].length; x++) {
-                if (closedPixels[y][x] == 1) {
-                    Pixel pixel = new Pixel(x, y, closedPixels[y][x]);
-                    graph.addVertex(pixel);
+    /**
+     * Counts the number of silhouettes in the given binary image.
+     *
+     * @param closedPixels The binary image (0 for background, 1 for foreground)
+     * @return The number of silhouettes in the image
+     */
+    private static int getAmountOfSilhuettes(int[][] closedPixels) {
+        int count = 0;
+        int[][] check = new int[closedPixels.length][closedPixels[0].length];
+        for (int i = 0; i < closedPixels.length; i++) {
+            for (int j = 0; j < closedPixels[i].length; j++) {
+                if (closedPixels[i][j] == 1) {
+                    count++;
+                    dfs(closedPixels, i, j);
                 }
             }
         }
-
-        for (Pixel p1 : graph.getNodes().keySet()){
-            for (Pixel p2 : graph.getNodes().keySet()){
-                if (p1 != p2 && p1.isNeighbor(p2)){
-                    graph.addEdge(p1,p2);
+        for (int i = 0; i < closedPixels.length; i++) {
+            for (int j = 0; j < closedPixels[i].length; j++) {
+                if (closedPixels[i][j] == -1) {
+                    check[i][j] = GImage.createRGBPixel(255, 0, 0);
                 }
             }
         }
-        graph.printGraph();
+        GImage checkImage = new GImage(check);
+        checkImage.saveImage("C:\\Users\\User\\IdeaProjects\\ExcelProcess\\shpp.cs\\src\\com\\shpp\\p2p\\cs\\azaika\\assignment12\\checked.png");
+        return count;
     }
 
+    /**
+     * Performs a depth-first search (DFS) on the given binary image.
+     *
+     * @param closedPixels The binary image (0 for background, 1 for foreground)
+     * @param y            The y-coordinate of the starting pixel
+     * @param x            The x-coordinate of the starting pixel
+     */
+    private static void dfs(int[][] closedPixels, int y, int x) {
+        int[] dx = {0, 0, 1, -1, -1, 1, 1, -1};
+        int[] dy = {1, -1, 0, 0, -1, 1, -1, 1};
+        if (x < 0 || y >= closedPixels.length || y < 0 || x >= closedPixels[0].length || closedPixels[y][x] != 1) {
+            return;
+        }
+        closedPixels[y][x] = -1;
+        for (int i = 0; i < 4; i++) {
+            int newX = x + dx[i];
+            int newY = y + dy[i];
+            dfs(closedPixels, newY, newX);
+        }
+    }
+
+    /**
+     * Applies thresholding to the given grayscale image.
+     *
+     * @param image The grayscale image
+     * @return The binarized image (0 for background, 1 for foreground)
+     */
     private static int[][] process(GImage image) {
         int[][] pixels = image.getPixelArray();
         int[] histogram = histogramFor(pixels);
         return thresHoldImage(pixels, histogram);
     }
 
+    /**
+     * Calculates the histogram of the given grayscale image.
+     *
+     * @param pixels The grayscale image
+     * @return The histogram of the image
+     */
     private static int[] histogramFor(int[][] pixels) {
         int[] histogram = new int[MAX_LUMINANCE + 1];
 
         for (int i = 0; i < pixels.length; i++) {
             for (int j = 0; j < pixels[i].length; j++) {
-                int grayValue = GImage.getRed(pixels[i][j]); // Отримання значення яскравості
+                int grayValue = GImage.getRed(pixels[i][j]);
                 histogram[grayValue]++;
             }
         }
         return histogram;
     }
 
+    /**
+     * Applies thresholding to the given grayscale image based on the calculated histogram.
+     *
+     * @param pixels    The grayscale image
+     * @param histogram The histogram of the image
+     * @return The binarized image (0 for background, 1 for foreground)
+     */
     private static int[][] thresHoldImage(int[][] pixels, int[] histogram) {
         int height = pixels.length;
         int width = pixels[0].length;
         int totalPixels = width * height;
 
-        // Обчислення ймовірностей
         float[] probabilities = new float[256];
         for (int i = 0; i < 256; i++) {
             probabilities[i] = (float) histogram[i] / totalPixels;
         }
-
-        // Пошук оптимального порогового значення
         float maxVariance = 0;
         int threshold = 0;
         for (int t = 0; t < 256; t++) {
@@ -110,11 +148,10 @@ public class Assignment12Part1 {
             }
         }
 
-        // Бінаризація зображення
         int[][] binarized = new int[height][width];
         for (int i = 0; i < height; i++) {
             for (int j = 0; j < width; j++) {
-                int grayValue = GImage.getRed(pixels[i][j]); // Отримання значення яскравості
+                int grayValue = GImage.getRed(pixels[i][j]);
                 binarized[i][j] = grayValue > threshold ? 0 : 1;
             }
         }
@@ -122,6 +159,12 @@ public class Assignment12Part1 {
         return binarized;
     }
 
+    /**
+     * Converts the given color image to grayscale.
+     *
+     * @param image The color image
+     * @return The grayscale image
+     */
     private static int[][] grayScaleImage(GImage image) {
         int[][] pixels = image.getPixelArray();
         int numRows = pixels.length;
@@ -142,6 +185,13 @@ public class Assignment12Part1 {
         return grayScalePixels;
     }
 
+    /**
+     * Performs dilation on the given binary image.
+     *
+     * @param image The binary image (0 for background, 1 for foreground)
+     * @param size  The size of the structuring element (must be odd)
+     * @return The dilated image
+     */
     private static int[][] dilate(int[][] image, int size) {
         int height = image.length;
         int width = image[0].length;
@@ -158,18 +208,25 @@ public class Assignment12Part1 {
                         int y = j + l;
 
                         if (x >= 0 && x < height && y >= 0 && y < width) {
-                            maxVal = Math.max(maxVal, GImage.getRed(image[x][y]));
+                            maxVal = Math.max(maxVal, image[x][y]);
                         }
                     }
                 }
 
-                dilated[i][j] = GImage.createRGBPixel(maxVal, maxVal, maxVal);
+                dilated[i][j] = maxVal;
             }
         }
 
         return dilated;
     }
 
+    /**
+     * Performs erosion on the given binary image.
+     *
+     * @param image The binary image (0 for background, 1 for foreground)
+     * @param size  The size of the structuring element (must be odd)
+     * @return The eroded image
+     */
     private static int[][] erode(int[][] image, int size) {
         int height = image.length;
         int width = image[0].length;
@@ -186,22 +243,37 @@ public class Assignment12Part1 {
                         int y = j + l;
 
                         if (x >= 0 && x < height && y >= 0 && y < width) {
-                            minVal = Math.min(minVal, GImage.getRed(image[x][y]));
+                            minVal = Math.min(minVal, image[x][y]);
                         }
                     }
                 }
 
-                eroded[i][j] = GImage.createRGBPixel(minVal, minVal, minVal);
+                eroded[i][j] = minVal;
             }
         }
 
         return eroded;
     }
+
+    /**
+     * Performs opening on the given binary image.
+     *
+     * @param image The binary image (0 for background, 1 for foreground)
+     * @param size  The size of the structuring element (must be odd)
+     * @return The opened image
+     */
     private static int[][] open(int[][] image, int size) {
         int[][] eroded = erode(image, size);
         return dilate(eroded, size);
     }
 
+    /**
+     * Performs closing on the given binary image.
+     *
+     * @param image The binary image (0 for background, 1 for foreground)
+     * @param size  The size of the structuring element (must be odd)
+     * @return The closed image
+     */
     private static int[][] close(int[][] image, int size) {
         int[][] dilated = dilate(image, size);
         return erode(dilated, size);
