@@ -11,19 +11,20 @@ public class Assignment12Part1 {
     private static final int MAX_LUMINANCE = 255;
 
     public static void main(String[] args) {
-        GImage image = new GImage("src/com/shpp/p2p/cs/azaika/assignment12/image.png");
+        GImage image = new GImage("src/com/shpp/p2p/cs/azaika/assignment12/image2.png");
 
         int[][] grayScalePixels = grayScaleImage(image);
         GImage grayImage = new GImage(grayScalePixels);
-        grayImage.saveImage("src/com/shpp/p2p/cs/azaika/assignment12/grayscale.png");
+        grayImage.saveImage("src/com/shpp/p2p/cs/azaika/assignment12/grayscale2.png");
 
         int[][] binarizedPixels = process(grayImage);
 
-        int[][] openedPixelsBin = open(binarizedPixels, 7);
-        int[][] closedPixelsBin = close(openedPixelsBin, 7);
+        int[][] openedPixelsBin = open(binarizedPixels, 4);
+        int[][] closedPixelsBin = close(openedPixelsBin, 4);
 
-        System.out.println(getAmountOfSilhuettes(closedPixelsBin));
+        System.out.println("Silhouettes:" + getAmountOfSilhouettes(closedPixelsBin));
     }
+
 
     /**
      * Counts the number of silhouettes in the given binary image.
@@ -31,7 +32,7 @@ public class Assignment12Part1 {
      * @param closedPixels The binary image (0 for background, 1 for foreground)
      * @return The number of silhouettes in the image
      */
-    private static int getAmountOfSilhuettes(int[][] closedPixels) {
+    private static int getAmountOfSilhouettes(int[][] closedPixels) {
         int count = 0;
         int[][] check = new int[closedPixels.length][closedPixels[0].length];
         for (int i = 0; i < closedPixels.length; i++) {
@@ -50,7 +51,7 @@ public class Assignment12Part1 {
             }
         }
         GImage checkImage = new GImage(check);
-        checkImage.saveImage("src/com/shpp/p2p/cs/azaika/assignment12/checked.png");
+        checkImage.saveImage("src/com/shpp/p2p/cs/azaika/assignment12/checked2.png");
         return count;
     }
 
