@@ -153,35 +153,54 @@ private static String getInputFileName(String[] args) throws IllegalArgumentExce
         return binarized;
     }
 
-    private static int getThreshold(float[] probabilities) {
-        float maxVariance = 0;
-        int threshold = 0;
-        for (int t = 0; t < 256; t++) {
-            float w0 = 0, w1 = 0;
-            float sum0 = 0, sum1 = 0;
+    /**
+ * Calculates the optimal threshold for binarizing a grayscale image using the Otsu's method.
+ * The method iterates through all possible threshold values and selects the one that maximizes the inter-class variance.
+ *
+ * @param probabilities The probability distribution of grayscale values in the image.
+ *                      The array index represents the grayscale value, and the value at that index represents the probability of that grayscale value.
+ *
+ * @return The optimal threshold value for binarizing the grayscale image.
+ */
+private static int getThreshold(float[] probabilities) {
+    float maxVariance = 0;
+    int threshold = 0;
 
-            for (int i = 0; i <= t; i++) {
-                w0 += probabilities[i];
-                sum0 += i * probabilities[i];
-            }
-            for (int i = t + 1; i < 256; i++) {
-                w1 += probabilities[i];
-                sum1 += i * probabilities[i];
-            }
+    for (int t = 0; t < 256; t++) {
+        float w0 = 0, w1 = 0;
+        float sum0 = 0, sum1 = 0;
 
-            if (w0 == 0 || w1 == 0) continue;
-
-            float mean0 = sum0 / w0;
-            float mean1 = sum1 / w1;
-            float variance = w0 * w1 * (mean0 - mean1) * (mean0 - mean1);
-
-            if (variance > maxVariance) {
-                maxVariance = variance;
-                threshold = t;
-            }
+        // Calculate the sum of probabilities and weighted sum for grayscale values less than or equal to the current threshold
+        for (int i = 0; i <= t; i++) {
+            w0 += probabilities[i];
+            sum0 += i * probabilities[i];
         }
-        return threshold;
+
+        // Calculate the sum of probabilities and weighted sum for grayscale values greater than the current threshold
+        for (int i = t + 1; i < 256; i++) {
+            w1 += probabilities[i];
+            sum1 += i * probabilities[i];
+        }
+
+        // Skip the iteration if either w0 or w1 is zero
+        if (w0 == 0 || w1 == 0) continue;
+
+        // Calculate the mean values for grayscale values less than or equal to the current threshold and greater than the current threshold
+        float mean0 = sum0 / w0;
+        float mean1 = sum1 / w1;
+
+        // Calculate the inter-class variance
+        float variance = w0 * w1 * (mean0 - mean1) * (mean0 - mean1);
+
+        // Update the maximum variance and the optimal threshold if the current variance is greater
+        if (variance > maxVariance) {
+            maxVariance = variance;
+            threshold = t;
+        }
     }
+
+    return threshold;
+}
 
     /**
      * Converts the given color image to grayscale.
