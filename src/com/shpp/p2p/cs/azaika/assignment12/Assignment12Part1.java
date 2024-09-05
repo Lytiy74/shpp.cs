@@ -3,9 +3,9 @@ package com.shpp.p2p.cs.azaika.assignment12;
 import acm.graphics.GImage;
 import acm.util.ErrorException;
 
+import javax.crypto.Cipher;
 import java.util.regex.Pattern;
 
-import static com.shpp.p2p.cs.azaika.assignment12.MathMorphological.*;
 
 /**
  * This class contains the main method and several helper methods for image processing.
@@ -13,46 +13,70 @@ import static com.shpp.p2p.cs.azaika.assignment12.MathMorphological.*;
  * and performs morphological operations (opening and closing) to count the number of silhouettes.
  */
 public class Assignment12Part1 {
-    private static final int STRUCTURING_ELEMENT_SIZE = 4;
 
+
+    /**
+     * The main method of the Assignment12Part1 class. It reads an image, converts it to grayscale, applies thresholding,
+     * and performs morphological operations (opening and closing) to count the number of silhouettes.
+     *
+     * @param args The command-line arguments.
+     */
     public static void main(String[] args) {
         try {
+            // Retrieve the input file name for the image processing program
             String fileName = getInputFileName(args);
-            GImage image = new GImage("com/shpp/p2p/cs/azaika/assignment12/" + fileName);
-            int[][] grayScalePixels = grayScaleImage(image);
-            int[][] binarizedPixels = binarizeImage(grayScalePixels);
-            int[][] openedPixelsBin = open(binarizedPixels, STRUCTURING_ELEMENT_SIZE);
-            int[][] closedPixelsBin = close(openedPixelsBin, STRUCTURING_ELEMENT_SIZE);
 
+            // Load the image from the specified file path
+            GImage image = new GImage(Constants.FILE_PATH + fileName);
+
+            // Convert the color image to grayscale
+            int[][] grayScalePixels = OtsuThresholding.grayScaleImage(image);
+
+            // Apply thresholding to the grayscale image
+            int[][] binarizedPixels = OtsuThresholding.binarizeImage(grayScalePixels);
+
+            // Perform opening morphological operation on the binarized image
+            int[][] openedPixelsBin = MathMorphological.getOpenedArrayOfImage(binarizedPixels, Constants.STRUCTURING_ELEMENT_SIZE);
+
+            // Perform closing morphological operation on the opened image
+            int[][] closedPixelsBin = MathMorphological.getClosedArrayOfImage(openedPixelsBin, Constants.STRUCTURING_ELEMENT_SIZE);
+
+            // Count the number of silhouettes in the closed image
             System.out.println("Silhouettes:" + getAmountOfSilhouettes(closedPixelsBin));
-        }catch (IllegalArgumentException | ErrorException e){
+        } catch (IllegalArgumentException | ErrorException e) {
+            // Print the error message if an exception occurs
             System.out.println(e.getMessage());
         }
     }
 
     /**
- * This method retrieves the input file name for the image processing program.
- * If no argument is provided, it defaults to "test.jpg".
- * If an argument is provided, it must match the pattern "\\w+.jpg" (a word followed by ".jpg").
- * If the argument does not match the pattern, an IllegalArgumentException is thrown.
- *
- * @param args The command-line arguments.
- * @return The input file name for the image processing program.
- * @throws IllegalArgumentException If the argument does not match the pattern "\\w+.jpg".
- */
-private static String getInputFileName(String[] args) throws IllegalArgumentException {
-    Pattern pattern = Pattern.compile("\\w+.jpg");
-    String fileName;
-    if (args.length > 0 && !pattern.matcher(args[0]).matches()) {
-        System.out.println("Usage: java Assignment12Part1 <image_file_name>.jpg");
-        throw new IllegalArgumentException("Wrong argument passed");
-    } else if (args.length == 0) {
-        fileName = "test.jpg";
-    } else {
-        fileName = args[0];
+     * This method retrieves the input file name for the image processing program.
+     * If no argument is provided, it defaults to "test.jpg".
+     * If an argument is provided, it must match the pattern "\\w+.jpg" (a word followed by ".jpg").
+     * If the argument does not match the pattern, an IllegalArgumentException is thrown.
+     *
+     * @param args The command-line arguments.
+     * @return The input file name for the image processing program.
+     * @throws IllegalArgumentException If the argument does not match the pattern "\\w+.jpg".
+     */
+    private static String getInputFileName(String[] args) throws IllegalArgumentException {
+        Pattern pattern = Pattern.compile(Constants.FILE_FORMAT_REGEX);
+        String fileName = Constants.DEFAULT_FILE_NAME; // Set default file name
+
+        if (args == null || args.length == 0 || args[0] == null) {
+            System.out.println("No valid file name provided. Using default file: " + fileName);
+            return fileName;
+        }
+
+        if (!pattern.matcher(args[0]).matches()) {
+            System.out.println("Usage: java Assignment12Part1 <imageFileName>.jpg | .png");
+            System.out.println("Invalid file format. Using default file: " + fileName);
+        } else {
+            fileName = args[0];
+        }
+
+        return fileName;
     }
-    return fileName;
-}
 
 
     /**
@@ -65,7 +89,7 @@ private static String getInputFileName(String[] args) throws IllegalArgumentExce
         int count = 0;
         for (int i = 0; i < closedPixels.length; i++) {
             for (int j = 0; j < closedPixels[i].length; j++) {
-                if (closedPixels[i][j] == 1) {
+                if (closedPixels[i][j] == Constants.BIN_BLACK_PIXEL) {
                     count++;
                     dfs(closedPixels, i, j);
                 }
@@ -82,151 +106,21 @@ private static String getInputFileName(String[] args) throws IllegalArgumentExce
      * @param x            The x-coordinate of the starting pixel
      */
     private static void dfs(int[][] closedPixels, int y, int x) {
-        int[] dx = {0, 0, 1, -1, -1, 1, 1, -1};
-        int[] dy = {1, -1, 0, 0, -1, 1, -1, 1};
-        if (x < 0 || y >= closedPixels.length || y < 0 || x >= closedPixels[0].length || closedPixels[y][x] != 1) {
-            return;
-        }
-        closedPixels[y][x] = -1;
-        for (int i = 0; i < 4; i++) {
-            int newX = x + dx[i];
-            int newY = y + dy[i];
-            dfs(closedPixels, newY, newX);
-        }
-    }
+        if (!isValid(closedPixels, y, x)) return;
 
-    /**
-     * Applies thresholding to the given grayscale image.
-     *
-     * @param imagePixels The grayscale image
-     * @return The binarized image (0 for a background, 1 for foreground)
-     */
-    private static int[][] binarizeImage(int[][] imagePixels) {
-        int[] histogram = histogramFor(imagePixels);
-        return thresHoldImage(imagePixels, histogram);
-    }
+        closedPixels[y][x] = Constants.BIN_VISITED_PIXEL; // Mark the current pixel as visited
 
-    /**
-     * Calculates the histogram of the given grayscale image.
-     *
-     * @param pixels The grayscale image
-     * @return The histogram of the image
-     */
-    private static int[] histogramFor(int[][] pixels) {
-        int[] histogram = new int[getMaxLuminance() + 1];
-
-        for (int[] pixel : pixels) {
-            for (int i : pixel) {
-                int grayValue = GImage.getRed(i);
-                histogram[grayValue]++;
-            }
-        }
-        return histogram;
-    }
-
-    /**
-     * Applies thresholding to the given grayscale image based on the calculated histogram.
-     *
-     * @param pixels    The grayscale image
-     * @param histogram The histogram of the image
-     * @return The binarized image (0 for a background, 1 for foreground)
-     */
-    private static int[][] thresHoldImage(int[][] pixels, int[] histogram) {
-        int height = pixels.length;
-        int width = pixels[0].length;
-        int totalPixels = width * height;
-
-        float[] probabilities = new float[256];
-        for (int i = 0; i < 256; i++) {
-            probabilities[i] = (float) histogram[i] / totalPixels;
-        }
-        int threshold = getThreshold(probabilities);
-
-        int[][] binarized = new int[height][width];
-        for (int i = 0; i < height; i++) {
-            for (int j = 0; j < width; j++) {
-                int grayValue = GImage.getRed(pixels[i][j]);
-                binarized[i][j] = grayValue > threshold ? 0 : 1;
-            }
-        }
-
-        return binarized;
-    }
-
-    /**
- * Calculates the optimal threshold for binarizing a grayscale image using the Otsu's method.
- * The method iterates through all possible threshold values and selects the one that maximizes the inter-class variance.
- *
- * @param probabilities The probability distribution of grayscale values in the image.
- *                      The array index represents the grayscale value, and the value at that index represents the probability of that grayscale value.
- *
- * @return The optimal threshold value for binarizing the grayscale image.
- */
-private static int getThreshold(float[] probabilities) {
-    float maxVariance = 0;
-    int threshold = 0;
-
-    for (int t = 0; t < 256; t++) {
-        float w0 = 0, w1 = 0;
-        float sum0 = 0, sum1 = 0;
-
-        // Calculate the sum of probabilities and weighted sum for grayscale values less than or equal to the current threshold
-        for (int i = 0; i <= t; i++) {
-            w0 += probabilities[i];
-            sum0 += i * probabilities[i];
-        }
-
-        // Calculate the sum of probabilities and weighted sum for grayscale values greater than the current threshold
-        for (int i = t + 1; i < 256; i++) {
-            w1 += probabilities[i];
-            sum1 += i * probabilities[i];
-        }
-
-        // Skip the iteration if either w0 or w1 is zero
-        if (w0 == 0 || w1 == 0) continue;
-
-        // Calculate the mean values for grayscale values less than or equal to the current threshold and greater than the current threshold
-        float mean0 = sum0 / w0;
-        float mean1 = sum1 / w1;
-
-        // Calculate the inter-class variance
-        float variance = w0 * w1 * (mean0 - mean1) * (mean0 - mean1);
-
-        // Update the maximum variance and the optimal threshold if the current variance is greater
-        if (variance > maxVariance) {
-            maxVariance = variance;
-            threshold = t;
+        // Process the four primary directions (up, down, left, right)
+        for (int i = 0; i < 4; i++) {  // Using only the first 4 directions for 4-way connectivity
+            int newY = y + Constants.DIRECTIONS[i][0];
+            int newX = x + Constants.DIRECTIONS[i][1];
+            dfs(closedPixels, newY, newX);  // Tail recursion call
         }
     }
 
-    return threshold;
-}
-
-    /**
-     * Converts the given color image to grayscale.
-     *
-     * @param image The color image
-     * @return The grayscale image
-     */
-    private static int[][] grayScaleImage(GImage image) {
-        int[][] pixels = image.getPixelArray();
-        int numRows = pixels.length;
-        int numCols = pixels[0].length;
-        int[][] grayScalePixels = new int[numRows][numCols];
-
-        for (int row = 0; row < numRows; ++row) {
-            for (int col = 0; col < numCols; ++col) {
-                int red = GImage.getRed(pixels[row][col]);
-                int green = GImage.getGreen(pixels[row][col]);
-                int blue = GImage.getBlue(pixels[row][col]);
-
-                int grayScaleValue = (int) (red * 0.299 + green * 0.587 + blue * 0.114);
-                grayScalePixels[row][col] = GImage.createRGBPixel(grayScaleValue, grayScaleValue, grayScaleValue);
-            }
-        }
-
-        return grayScalePixels;
+    // Check if the current position is within bounds and is a closed pixel
+    private static boolean isValid(int[][] closedPixels, int y, int x) {
+        return x >= 0 && y >= 0 && y < closedPixels.length && x < closedPixels[0].length && closedPixels[y][x] == Constants.BIN_VISITED_PIXEL;
     }
-
 
 }
