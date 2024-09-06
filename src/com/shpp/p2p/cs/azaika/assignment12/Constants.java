@@ -15,7 +15,7 @@ public interface Constants {
     // File a path for the image file in a project
     String FILE_PATH = "com/shpp/p2p/cs/azaika/assignment12/";
     String FILE_FORMAT_REGEX = ".+.jpg|png";
-    String DEFAULT_FILE_NAME = "test.jpg";
+    String DEFAULT_FILE_NAME = "test.png";
     int MAX_LUMINANCE = 256;
     int BIN_BLACK_PIXEL = 1;
     int BIN_VISITED_PIXEL = -1;
@@ -24,8 +24,8 @@ public interface Constants {
     double GRAY_SCALE_FOR_GREEN = 0.587;
     double GRAY_SCALE_FOR_BLUE = 0.114;
     int[][] DIRECTIONS = {
-            {0, 1}, {0, -1}, {1, 0}, {-1, 0}, // 4 directions (up, down, right, left)
-            {-1, -1}, {1, 1}, {1, -1}, {-1, 1} // diagonal directions, not used here but available
+            {0, 0, 1, -1, -1, 1, 1, -1}, // 4 directions (up, down, right, left)
+            {1, -1, 0, 0, -1, 1, -1, 1} // diagonal directions, not used here but available
     };
 
 }

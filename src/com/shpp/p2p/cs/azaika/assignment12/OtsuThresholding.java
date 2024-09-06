@@ -24,7 +24,7 @@ public class OtsuThresholding {
      * @return The histogram of the image
      */
     public static int[] histogramFor(int[][] pixels) {
-        int[] histogram = new int[Constants.MAX_LUMINANCE - 1];
+        int[] histogram = new int[Constants.MAX_LUMINANCE];
 
         for (int[] pixel : pixels) {
             for (int i : pixel) {
@@ -63,7 +63,9 @@ public class OtsuThresholding {
 
         return binarized;
     }
-    public record WeightsAndSums(float w0, float w1, float sum0, float sum1) {}
+
+    public record WeightsAndSums(float w0, float w1, float sum0, float sum1) {
+    }
 
 
     public static int getThreshold(float[] probabilities) {

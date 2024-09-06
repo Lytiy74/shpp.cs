@@ -63,7 +63,7 @@ public class Assignment12Part1 {
         Pattern pattern = Pattern.compile(Constants.FILE_FORMAT_REGEX);
         String fileName = Constants.DEFAULT_FILE_NAME; // Set default file name
 
-        if (args == null || args.length == 0 || args[0] == null) {
+        if (args == null || args.length == 0) {
             System.out.println("No valid file name provided. Using default file: " + fileName);
             return fileName;
         }
@@ -111,16 +111,16 @@ public class Assignment12Part1 {
         closedPixels[y][x] = Constants.BIN_VISITED_PIXEL; // Mark the current pixel as visited
 
         // Process the four primary directions (up, down, left, right)
-        for (int i = 0; i < 4; i++) {  // Using only the first 4 directions for 4-way connectivity
-            int newY = y + Constants.DIRECTIONS[i][0];
-            int newX = x + Constants.DIRECTIONS[i][1];
-            dfs(closedPixels, newY, newX);  // Tail recursion call
+        for (int i = 0; i < Constants.DIRECTIONS[0].length; i++) {
+            int newX = x + Constants.DIRECTIONS[0][i];
+            int newY = y + Constants.DIRECTIONS[1][i];
+            dfs(closedPixels, newY, newX);
         }
     }
 
     // Check if the current position is within bounds and is a closed pixel
     private static boolean isValid(int[][] closedPixels, int y, int x) {
-        return x >= 0 && y >= 0 && y < closedPixels.length && x < closedPixels[0].length && closedPixels[y][x] == Constants.BIN_VISITED_PIXEL;
+        return y < closedPixels.length && y >= 0 && x < closedPixels[0].length && x >= 0 && closedPixels[y][x] == Constants.BIN_BLACK_PIXEL;
     }
 
 }
