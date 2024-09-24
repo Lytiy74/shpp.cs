@@ -99,6 +99,15 @@ public class Assignment13Part1 {
         return count;
     }
 
+    /**
+     * Performs a breadth-first search (BFS) on a grid of pixels starting from the specified coordinates.
+     * This method is typically used for pixel clustering or flood-fill algorithms.
+     *
+     * @param closedPixels A 2D array representing the pixel grid. Each element indicates whether a pixel is traversable.
+     * @param visited A 2D boolean array indicating whether a pixel has been visited.
+     * @param startY The starting Y-coordinate for the BFS.
+     * @param startX The starting X-coordinate for the BFS.
+     */
     private static void bfs(int[][] closedPixels, boolean[][] visited, int startY, int startX) {
         Queue<int[]> queueOfPixelsThatNeedToBeChecked = new LinkedList<>();
         queueOfPixelsThatNeedToBeChecked.add(new int[]{startY, startX});
