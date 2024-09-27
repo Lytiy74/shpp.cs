@@ -1,9 +1,8 @@
-package p2p.cs.azaika.assignment13;
+package com.shpp.p2p.cs.azaika.assignment13;
 
 import acm.graphics.GImage;
 import acm.util.ErrorException;
 
-import java.util.*;
 import java.util.regex.Pattern;
 
 
@@ -33,22 +32,21 @@ public class Assignment13Part1 {
             int[][] grayScalePixels = OtsuThresholding.grayScaleImage(image);
 
             // Apply thresholding to the grayscale image
-            int[][] binarizedPixels = OtsuThresholding.binarizeImage(grayScalePixels);
+            boolean[][] binarizedPixels = OtsuThresholding.binarizeImage(grayScalePixels);
 
             // Perform opening morphological operation on the binarized image
-            int[][] openedPixelsBin = MathMorphological.getOpenedArrayOfImage(binarizedPixels, Constants.STRUCTURING_ELEMENT_SIZE);
+            boolean[][] openedPixelsBin = MathMorphological.getOpenedArrayOfImage(binarizedPixels);
 
             // Perform closing morphological operation on the opened image
-            int[][] closedPixelsBin = MathMorphological.getClosedArrayOfImage(openedPixelsBin, Constants.STRUCTURING_ELEMENT_SIZE);
+            boolean[][] closedPixelsBin = MathMorphological.getClosedArrayOfImage(openedPixelsBin);
 
             // Count the number of silhouettes in the closed image
-            System.out.println("Silhouettes:" + getAmountOfSilhouettes(closedPixelsBin));
+            System.out.println("Silhouettes:" + SilhouettesFinder.getAmountOfSilhouettes(closedPixelsBin));
         } catch (IllegalArgumentException | ErrorException e) {
             // Print the error message if an exception occurs
             System.out.println(e.getMessage());
         }
     }
-
     /**
      * This method retrieves the input file name for the image processing program.
      * If no argument is provided, it defaults to "test.jpg".
@@ -76,67 +74,6 @@ public class Assignment13Part1 {
         }
 
         return fileName;
-    }
-
-
-    /**
-     * Counts the number of silhouettes in the given binary image.
-     *
-     * @param closedPixels The binary image (0 for a background, 1 for foreground)
-     * @return The number of silhouettes in the image
-     */
-    private static int getAmountOfSilhouettes(int[][] closedPixels) {
-        int count = 0;
-        boolean[][] visited = new boolean[closedPixels.length][closedPixels[0].length];
-        for (int i = 0; i < closedPixels.length; i++) {
-            for (int j = 0; j < closedPixels[i].length; j++) {
-                if (closedPixels[i][j] == Constants.BIN_BLACK_PIXEL && !visited[i][j]) {
-                    count++;
-                    bfs(closedPixels, visited, i, j);
-                }
-            }
-        }
-        return count;
-    }
-
-    /**
-     * Performs a breadth-first search (BFS) on a grid of pixels starting from the specified coordinates.
-     * This method is typically used for pixel clustering or flood-fill algorithms.
-     *
-     * @param closedPixels A 2D array representing the pixel grid. Each element indicates whether a pixel is traversable.
-     * @param visited A 2D boolean array indicating whether a pixel has been visited.
-     * @param startY The starting Y-coordinate for the BFS.
-     * @param startX The starting X-coordinate for the BFS.
-     */
-    private static void bfs(int[][] closedPixels, boolean[][] visited, int startY, int startX) {
-        Queue<int[]> queueOfPixelsThatNeedToBeChecked = new LinkedList<>();
-        queueOfPixelsThatNeedToBeChecked.add(new int[]{startY, startX});
-        visited[startY][startX] = true;
-        while (!queueOfPixelsThatNeedToBeChecked.isEmpty()) {
-            int[] currentPixel = queueOfPixelsThatNeedToBeChecked.poll();
-            int y = currentPixel[0];
-            int x = currentPixel[1];
-            for (int i = 0; i < Constants.DIRECTIONS[0].length; i++) {
-                int newX = x + Constants.DIRECTIONS[0][i];
-                int newY = y + Constants.DIRECTIONS[1][i];
-                if (isValid(closedPixels, visited, newY, newX)) {
-                    queueOfPixelsThatNeedToBeChecked.add(new int[]{newY, newX});
-                    visited[newY][newX] = true;
-                }
-            }
-        }
-
-
-    }
-
-    // Check if the current position is within bounds and is a closed pixel
-    private static boolean isValid(int[][] closedPixels, boolean[][] visited, int y, int x) {
-        return y < closedPixels.length
-                && y >= 0
-                && x < closedPixels[0].length
-                && x >= 0
-                && closedPixels[y][x] == Constants.BIN_BLACK_PIXEL
-                && !visited[y][x];
     }
 
 }

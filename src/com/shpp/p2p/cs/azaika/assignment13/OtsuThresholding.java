@@ -1,4 +1,4 @@
-package p2p.cs.azaika.assignment13;
+package com.shpp.p2p.cs.azaika.assignment13;
 
 import acm.graphics.GImage;
 
@@ -12,7 +12,7 @@ public class OtsuThresholding {
      * @param imagePixels The grayscale image
      * @return The binarized image (0 for a background, 1 for foreground)
      */
-    public static int[][] binarizeImage(int[][] imagePixels) {
+    public static boolean[][] binarizeImage(int[][] imagePixels) {
         int[] histogram = histogramFor(imagePixels);
         return thresholdImage(imagePixels, histogram);
     }
@@ -23,7 +23,7 @@ public class OtsuThresholding {
      * @param pixels The grayscale image
      * @return The histogram of the image
      */
-    public static int[] histogramFor(int[][] pixels) {
+    private static int[] histogramFor(int[][] pixels) {
         int[] histogram = new int[Constants.MAX_LUMINANCE];
 
         for (int[] pixel : pixels) {
@@ -42,7 +42,7 @@ public class OtsuThresholding {
      * @param histogram The histogram of the image
      * @return The binarized image (0 for a background, 1 for foreground)
      */
-    public static int[][] thresholdImage(int[][] pixels, int[] histogram) {
+    private static boolean[][] thresholdImage(int[][] pixels, int[] histogram) {
         int height = pixels.length;
         int width = pixels[0].length;
 
@@ -53,7 +53,7 @@ public class OtsuThresholding {
         }
         int threshold = getThreshold(probabilities);
 
-        int[][] binarized = new int[height][width];
+        boolean[][] binarized = new boolean[height][width];
         for (int i = 0; i < height; i++) {
             for (int j = 0; j < width; j++) {
                 int grayValue = GImage.getRed(pixels[i][j]);
@@ -68,7 +68,15 @@ public class OtsuThresholding {
     }
 
 
-    public static int getThreshold(float[] probabilities) {
+    /**
+     * Determines the optimal threshold value for binarizing an image based on the given probabilities
+     * using Otsu's thresholding method.
+     *
+     * @param probabilities An array of probabilities representing the distribution of grayscale values
+     *                      in the image.
+     * @return The optimal threshold value to separate foreground and background in the image.
+     */
+    private static int getThreshold(float[] probabilities) {
         float maxVariance = 0;
         int threshold = 0;
 

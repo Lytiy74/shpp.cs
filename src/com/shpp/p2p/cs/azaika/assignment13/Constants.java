@@ -1,4 +1,4 @@
-package p2p.cs.azaika.assignment13;
+package com.shpp.p2p.cs.azaika.assignment13;
 
 /**
  * This interface contains various constants used throughout the image processing application.
@@ -11,15 +11,14 @@ public interface Constants {
                      It is typically used in morphological operations, such as dilation, erosion, opening,
                      and closing, as well as the hit-or-miss transform.
                      */
-    int STRUCTURING_ELEMENT_SIZE = 4;
+    int STRUCTURING_ELEMENT_SIZE = 16;
     // File a path for the image file in a project
     String FILE_PATH = "src/com/shpp/p2p/cs/azaika/assignment13/";
-    String FILE_FORMAT_REGEX = ".+.jpg|png";
-    String DEFAULT_FILE_NAME = "test.png";
+    String FILE_FORMAT_REGEX = ".+.(jpg|png)";
+    String DEFAULT_FILE_NAME = "test.jpg";
     int MAX_LUMINANCE = 256;
-    int BIN_BLACK_PIXEL = 1;
-    int BIN_VISITED_PIXEL = -1;
-    int BIN_WHITE_PIXEL = 0;
+    boolean BIN_BLACK_PIXEL = true;
+    boolean BIN_WHITE_PIXEL = false;
     double GRAY_SCALE_FOR_RED = 0.299;
     double GRAY_SCALE_FOR_GREEN = 0.587;
     double GRAY_SCALE_FOR_BLUE = 0.114;
