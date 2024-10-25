@@ -1,5 +1,6 @@
 package com.shpp.p2p.cs.azaika.collections.arraylist.test;
 
+import com.shpp.p2p.cs.azaika.collections.FailedTestException;
 import com.shpp.p2p.cs.azaika.collections.arraylist.ArrayList;
 
 import java.util.Arrays;

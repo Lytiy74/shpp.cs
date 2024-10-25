@@ -18,7 +18,7 @@ public class ArrayList<T> implements Iterator<T> {
         this.array = (T[]) new Object[initCapacity];
     }
 
-    public ArrayList <T> Of(T...elements){
+    public static <T> ArrayList <T> Of(T...elements){
         ArrayList<T> arrayList = new ArrayList<>();
         for (T element : elements) {
             arrayList.add(element);
