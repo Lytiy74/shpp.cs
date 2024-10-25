@@ -20,7 +20,7 @@ import java.util.HashMap;
 public class NameSurferDataBase implements NameSurferConstants {
     private final HashMap<String, NameSurferEntry> entryHashMap = new HashMap<>();
 
-    /* Constructor: NameSurferDataBase(filename) */
+	/* Constructor: NameSurferDataBase(filename) */
 
     /**
      * Creates a new NameSurferDataBase and initializes it using the
@@ -38,15 +38,15 @@ public class NameSurferDataBase implements NameSurferConstants {
                 // Add the entry to the hash map with the name as the key
                 entryHashMap.put(entry.getName().toLowerCase(), entry);
             }
-        } catch (FileNotFoundException e) {
+        }catch (FileNotFoundException e) {
             System.out.println("File not found: " + filename);
-        } catch (IOException e) {
+        }catch (IOException e) {
             System.out.println("Error reading file: " + filename);
         }
         System.out.println("Loaded " + entryHashMap.size() + " names surfer.");
     }
-
-    /* Method: findEntry(name) */
+	
+	/* Method: findEntry(name) */
 
     /**
      * Returns the NameSurferEntry associated with this name, if one

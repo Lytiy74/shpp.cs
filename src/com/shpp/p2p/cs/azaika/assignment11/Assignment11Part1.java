@@ -24,7 +24,6 @@ public class Assignment11Part1 {
         }
 
         Queue<String> postfix = makePostfix(formula);
-        System.out.println(postfix);
         double calculationResult = calculatePostfix(postfix, variables);
         System.out.println(calculationResult);
     }

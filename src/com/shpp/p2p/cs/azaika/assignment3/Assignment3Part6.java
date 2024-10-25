@@ -13,7 +13,7 @@ public class Assignment3Part6 extends WindowProgram {
     private static final int OFFSET_X_AXIS = 30;
     private static final int OFFSET_Y_AXIS = 100;
     private static final int ANIMATION_DURATION_MILLISECONDS = 5000;
-    private static final int FRAMES_PER_SECOND = 1000 / 240;
+    private static final int FRAMES_PER_SECOND = 1000 / 60;
 
     @Override
     public void run() {

@@ -1,6 +1,3 @@
-1.In NameSurferGraph.java were reworked methods clear() and addEntry(NameSurferEntry entry)
-Now they dont call update(); now its called in NameSurfer.java in actionperformed. 
+Refactor morphological operations and silhouette detection
 
-2.In drawSheet() magicnumber 10 (which describes decade) replaced by constant DECADE
-
-3.Now text in textfield trims every whitespace
+Refactor code to use boolean arrays for binary images and modularize silhouette detection logic into a separate class. This change improves readability, modularity, and performance of the image processing pipeline. The package naming is fixed

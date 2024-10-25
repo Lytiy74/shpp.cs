@@ -11,7 +11,7 @@ This program draws illusion with four ovals in each corner and rectangle in the 
 
 public class Assignment2Part2 extends WindowProgram {
     // Variables for a window and oval dimensions
-    public static final int APPLICATION_WIDTH = 500;
+    public static final int APPLICATION_WIDTH = 300;
     public static final int APPLICATION_HEIGHT = 300;
     private static final int OVAL_SIZE_COEFFICIENT = 3; // Coefficient for oval size
     private static final int OVAL_DIAMETER = Math.min(APPLICATION_WIDTH, APPLICATION_HEIGHT) / OVAL_SIZE_COEFFICIENT;

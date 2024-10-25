@@ -48,12 +48,22 @@ public class Assignment2Part5 extends WindowProgram {
             for (int j = 0; j < NUM_COLS; j++) {
                 double x = (getWidth() / 2.0 - BOX_SIZE / 2.0) - middleOfRow + j * (BOX_SPACING + BOX_SIZE);
                 double y = (getHeight() / 2.0 - BOX_SIZE / 2.0) - middleOfColumn + i * (BOX_SPACING + BOX_SIZE);
-                GRect gRect = new GRect(x, y, BOX_SIZE, BOX_SIZE);
-                gRect.setColor(Color.black);
-                gRect.setFilled(true);
-                gRect.setColor(Color.black);
-                add(gRect);
+                add(getRect(x, y));
             }
         }
+    }
+
+    /**
+     * Method make a rectangle
+     * @param x coordinate to x axis
+     * @param y coordinate to y axis
+     * @return instance of rectangle
+     */
+    private static GRect getRect(double x, double y) {
+        GRect gRect = new GRect(x, y, BOX_SIZE, BOX_SIZE);
+        gRect.setColor(Color.black);
+        gRect.setFilled(true);
+        gRect.setColor(Color.black);
+        return gRect;
     }
 }

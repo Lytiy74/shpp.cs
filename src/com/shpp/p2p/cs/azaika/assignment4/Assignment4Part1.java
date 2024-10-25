@@ -160,7 +160,7 @@ public class Assignment4Part1 extends WindowProgram {
 
         if (dx == 0) dx++;
         waitForClick();
-        // Wait for user click to start the game
+         // Wait for user click to start the game
         while (!bricks.isEmpty() && LIVES != 0) {
             if ((ball.getY() >= getHeight())) { // If ball goes below the canvas
                 LIVES--; // Decrement lives

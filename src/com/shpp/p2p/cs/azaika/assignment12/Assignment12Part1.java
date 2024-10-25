@@ -3,7 +3,6 @@ package com.shpp.p2p.cs.azaika.assignment12;
 import acm.graphics.GImage;
 import acm.util.ErrorException;
 
-import javax.crypto.Cipher;
 import java.util.regex.Pattern;
 
 
@@ -61,7 +60,7 @@ public class Assignment12Part1 {
      */
     private static String getInputFileName(String[] args) throws IllegalArgumentException {
         Pattern pattern = Pattern.compile(Constants.FILE_FORMAT_REGEX);
-        String fileName = Constants.DEFAULT_FILE_NAME; // Set default file name
+        String fileName = Constants.DEFAULT_FILE_NAME;
 
         if (args == null || args.length == 0) {
             System.out.println("No valid file name provided. Using default file: " + fileName);
@@ -108,7 +107,7 @@ public class Assignment12Part1 {
     private static void dfs(int[][] closedPixels, int y, int x) {
         if (!isValid(closedPixels, y, x)) return;
 
-        closedPixels[y][x] = Constants.BIN_VISITED_PIXEL; // Mark the current pixel as visited
+        closedPixels[y][x] = Constants.VISITED_PIXEL; // Mark the current pixel as visited
 
         // Process the four primary directions (up, down, left, right)
         for (int i = 0; i < Constants.DIRECTIONS[0].length; i++) {

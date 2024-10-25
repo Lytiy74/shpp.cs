@@ -7,22 +7,33 @@ package com.shpp.p2p.cs.azaika.assignment12;
  */
 public interface Constants {
     /* Structuring element is a shape, used to probe or interact with a given image.
-                     with the purpose of drawing conclusions on how this shape fits or misses the shapes in the image.
-                     It is typically used in morphological operations, such as dilation, erosion, opening,
-                     and closing, as well as the hit-or-miss transform.
-                     */
-    int STRUCTURING_ELEMENT_SIZE = 4;
+    with the purpose of drawing conclusions on how this shape fits or misses the shapes in the image.
+    It is typically used in morphological operations, such as dilation, erosion, opening,
+    and closing, as well as the hit-or-miss transform.
+    */
+    int STRUCTURING_ELEMENT_SIZE = 7;
+
+    int MAX_LUMINANCE = 256;
+    // Binary representation of the black pixel
+    int BIN_BLACK_PIXEL = 1;
+    // Represents the visited pixel
+    int VISITED_PIXEL = -1;
+
+    int BIN_WHITE_PIXEL = 0;
     // File a path for the image file in a project
     String FILE_PATH = "com/shpp/p2p/cs/azaika/assignment12/";
-    String FILE_FORMAT_REGEX = ".+.jpg|png";
+
+    String FILE_FORMAT_REGEX = ".+.(jpg|png)";
+
     String DEFAULT_FILE_NAME = "test.png";
-    int MAX_LUMINANCE = 256;
-    int BIN_BLACK_PIXEL = 1;
-    int BIN_VISITED_PIXEL = -1;
-    int BIN_WHITE_PIXEL = 0;
-    double GRAY_SCALE_FOR_RED = 0.299;
-    double GRAY_SCALE_FOR_GREEN = 0.587;
-    double GRAY_SCALE_FOR_BLUE = 0.114;
+
+
+    double GRAY_SCALE_COEFFICIENT_FOR_RED = 0.299;
+
+    double GRAY_SCALE_COEFFICIENT_FOR_GREEN = 0.587;
+
+    double GRAY_SCALE_COEFFICIENT_FOR_BLUE = 0.114;
+
     int[][] DIRECTIONS = {
             {0, 0, 1, -1, -1, 1, 1, -1}, // 4 directions (up, down, right, left)
             {1, -1, 0, 0, -1, 1, -1, 1} // diagonal directions, not used here but available

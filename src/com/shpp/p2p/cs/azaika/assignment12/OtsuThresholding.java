@@ -83,7 +83,6 @@ public class OtsuThresholding {
             float mean0 = ws.sum0() / ws.w0();
             float mean1 = ws.sum1() / ws.w1();
 
-            // Calculate the inter-class variance
             float variance = ws.w0() * ws.w1() * (mean0 - mean1) * (mean0 - mean1);
 
             // Update the maximum variance and the optimal threshold if the current variance is greater
@@ -134,7 +133,12 @@ public class OtsuThresholding {
                 int green = GImage.getGreen(pixels[row][col]);
                 int blue = GImage.getBlue(pixels[row][col]);
 
-                int grayScaleValue = (int) (red * Constants.GRAY_SCALE_FOR_RED + green * Constants.GRAY_SCALE_FOR_GREEN + blue * Constants.GRAY_SCALE_FOR_BLUE);
+                if (GImage.getAlpha(pixels[row][col]) == 0) {
+                    grayScalePixels[row][col] = GImage.createRGBPixel(Constants.MAX_LUMINANCE-1,Constants.MAX_LUMINANCE-1,Constants.MAX_LUMINANCE-1);
+                    continue;
+                }
+
+                int grayScaleValue = (int) (red * Constants.GRAY_SCALE_COEFFICIENT_FOR_RED + green * Constants.GRAY_SCALE_COEFFICIENT_FOR_GREEN + blue * Constants.GRAY_SCALE_COEFFICIENT_FOR_BLUE);
                 grayScalePixels[row][col] = GImage.createRGBPixel(grayScaleValue, grayScaleValue, grayScaleValue);
             }
         }

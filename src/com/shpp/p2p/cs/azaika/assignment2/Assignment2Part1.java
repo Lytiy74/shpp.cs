@@ -23,7 +23,7 @@ public class Assignment2Part1 extends TextProgram {
      * <p><b>Result:</b> Prints the roots of the quadratic equation if they exist.</p>
      */
     private void getRoots(double a, double b, double c) {
-        if (a <= 0){
+        if (a == 0){
             System.out.println("a must be greater then 0");
             return;
         }
