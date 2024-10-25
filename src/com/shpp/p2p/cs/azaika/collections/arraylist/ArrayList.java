@@ -2,6 +2,7 @@ package com.shpp.p2p.cs.azaika.collections.arraylist;
 
 import java.util.Arrays;
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 import java.util.Objects;
 
 public class ArrayList<T> implements Iterator<T> {
@@ -84,7 +85,7 @@ public class ArrayList<T> implements Iterator<T> {
     @Override
     public T next() {
         if (!hasNext()){
-            return null;
+            throw new NoSuchElementException();
         }
         T element = array[currentPosition];
         currentPosition++;

@@ -1,8 +1,11 @@
 package com.shpp.p2p.cs.azaika.collections.linkedlist;
 
+import java.util.Iterator;
+import java.util.NoSuchElementException;
 import java.util.Objects;
 
-public class LinkedList<T> {
+public class LinkedList<T> implements Iterator<T> {
+
     private static class Node<T> {
         T element;
         Node<T> next;
@@ -15,6 +18,7 @@ public class LinkedList<T> {
     private int size;
     private Node<T> head;
     private Node<T> tail;
+    private Node<T> current = head;
 
     public static <T> LinkedList<T> of(T... elements) {
         LinkedList<T> linkedList = new LinkedList<>();
@@ -116,6 +120,19 @@ public class LinkedList<T> {
 
     public T getLast() {
         return tail.element;
+    }
+
+    @Override
+    public boolean hasNext() {
+        return current == null && current.next != null;
+    }
+
+    @Override
+    public T next() {
+        if (hasNext()) {
+            return current.next.element;
+        }
+        throw new NoSuchElementException();
     }
 
 }

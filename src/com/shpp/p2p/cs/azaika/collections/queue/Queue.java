@@ -2,7 +2,10 @@ package com.shpp.p2p.cs.azaika.collections.queue;
 
 import com.shpp.p2p.cs.azaika.collections.linkedlist.LinkedList;
 
-public class Queue <T> {
+import java.util.Iterator;
+import java.util.NoSuchElementException;
+
+public class Queue <T> implements Iterator<T> {
     private final LinkedList<T> linkedList;
 
     public Queue() {
@@ -24,5 +27,18 @@ public class Queue <T> {
 
     public boolean isEmpty(){
         return linkedList.isEmpty();
+    }
+
+    @Override
+    public boolean hasNext() {
+       return linkedList.size() != 0;
+    }
+
+    @Override
+    public T next() {
+        if (hasNext()){
+            return poll();
+        }
+        throw new NoSuchElementException();
     }
 }
