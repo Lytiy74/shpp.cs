@@ -2,24 +2,42 @@ package com.shpp.p2p.cs.azaika.collections.arraylist;
 
 import java.util.Arrays;
 import java.util.Iterator;
-import java.util.NoSuchElementException;
 import java.util.Objects;
 
-public class ArrayList<T> implements Iterator<T> {
+/**
+ * A custom implementation of a dynamic array (ArrayList) that supports generic types.
+ *
+ * @param <T> the type of elements in this list
+ */
+public class ArrayList<T> implements Iterable<T> {
+    public static final double COEFFICIENT_OF_LOAD_FACTOR = 0.6;
     private T[] array;
     private int size;
     private final static int DEFAULT_ARRAY_SIZE = 10;
-    private int currentPosition;
 
+    /**
+     * Constructs an empty ArrayList with the default initial capacity (10).
+     */
     public ArrayList() {
         this.array = (T[]) new Object[DEFAULT_ARRAY_SIZE];
     }
 
+    /**
+     * Constructs an empty ArrayList with the specified initial capacity.
+     *
+     * @param initCapacity the initial capacity of the ArrayList
+     */
     public ArrayList(int initCapacity) {
         this.array = (T[]) new Object[initCapacity];
     }
 
-    public static <T> ArrayList <T> Of(T...elements){
+    /**
+     * Returns a new ArrayList containing the specified elements.
+     *
+     * @param elements the elements to be added to the new ArrayList
+     * @return a new ArrayList containing the specified elements
+     */
+    public static <T> ArrayList<T> Of(T... elements) {
         ArrayList<T> arrayList = new ArrayList<>();
         for (T element : elements) {
             arrayList.add(element);
@@ -27,69 +45,106 @@ public class ArrayList<T> implements Iterator<T> {
         return arrayList;
     }
 
+    /**
+     * Appends the specified element to the end of this list.
+     *
+     * @param element the element to be appended to this list
+     */
     public void add(T element) {
         increaseArrayIfItFull();
         array[size] = element;
         size++;
     }
 
-    public void add(int index, T element){
-        Objects.checkIndex(index,size);
+    /**
+     * Inserts the specified element at the specified position in this list.
+     *
+     * @param index the index at which the specified element is to be inserted
+     * @param element the element to be inserted
+     */
+    public void add(int index, T element) {
+        Objects.checkIndex(index, size);
         increaseArrayIfItFull();
-        System.arraycopy(array,index,array,index+1,size - index);
+        System.arraycopy(array, index, array, index + 1, size - index);
         size++;
         array[index] = element;
     }
 
+    /**
+     * Increases the capacity of the array if it is full.
+     */
     private void increaseArrayIfItFull() {
-        if (size >= array.length/0.6) {
+        if (size >= array.length / COEFFICIENT_OF_LOAD_FACTOR) {
             T[] resizedArray = (T[]) new Object[array.length * 2];
             System.arraycopy(array, 0, resizedArray, 0, array.length);
             array = resizedArray;
         }
     }
 
-
-    public T remove(int index){
-        Objects.checkIndex(index,size);
+    /**
+     * Removes the element at the specified position in this list.
+     *
+     * @param index the index of the element to be removed
+     * @return the element that was removed from the list
+     */
+    public T remove(int index) {
+        Objects.checkIndex(index, size);
         T removedElement = array[index];
-        System.arraycopy(array,index+1,array,index,size - index);
+        System.arraycopy(array, index + 1, array, index, size - index);
         size--;
         return removedElement;
     }
 
-    public T get(int index){
-        Objects.checkIndex(index,size);
+    /**
+     * Returns the element at the specified position in this list.
+     *
+     * @param index the index of the element to return
+     * @return the element at the specified position in this list
+     */
+    public T get(int index) {
+        Objects.checkIndex(index, size);
         return array[index];
     }
 
-    public void clear(){
+    /**
+     * Removes all of the elements from this list.
+     */
+    public void clear() {
         array = (T[]) new Object[DEFAULT_ARRAY_SIZE];
         size = 0;
     }
 
-
-    public int size(){
+    public int size() {
         return size;
     }
 
-    public boolean isEmpty(){
+    public boolean isEmpty() {
         return size == 0;
     }
 
     @Override
-    public boolean hasNext() {
-        return currentPosition < size;
+    public Iterator<T> iterator() {
+        return new ArrayListIterator();
     }
 
-    @Override
-    public T next() {
-        if (!hasNext()){
-            throw new NoSuchElementException();
+    /**
+     * An iterator for ArrayList.
+     */
+    private class ArrayListIterator implements Iterator<T> {
+        private int currentPosition;
+
+
+        @Override
+        public boolean hasNext() {
+            return currentPosition < size;
         }
-        T element = array[currentPosition];
-        currentPosition++;
-        return element;
+
+        @Override
+        public T next() {
+            T element = array[currentPosition];
+            currentPosition++;
+            return element;
+        }
     }
 
     @Override

@@ -73,4 +73,5 @@ public class StackTest {
         System.out.println("✓ Test IsEmpty PASSED!");
 
     }
+
 }

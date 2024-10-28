@@ -19,7 +19,6 @@ public class QueueTest {
         queue.add(0);
         queue.add(1);
         queue.add(3);
-
         int[] expected = new int[]{0, 1, 3};
         for (int i = 0; i < queue.size(); i++) {
             Integer polled = queue.poll();
