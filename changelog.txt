@@ -1,3 +1,18 @@
-Refactor morphological operations and silhouette detection
+Reworked Assignment10 and Assignment11
 
-Refactor code to use boolean arrays for binary images and modularize silhouette detection logic into a separate class. This change improves readability, modularity, and performance of the image processing pipeline. The package naming is fixed
+Assignment10 and Assignment11 were decomposed, they now have similar classes :
+1.Calculator response for calculation operation
+2.PostfixConvertor response for parsing infix formula to postfix (rpn)
+3.PrecedenceChecker small class which contain precedence of operators
+4.VariableReplacer class which replace variable in formula and returns a hash map where key is a variable name and value is a variable value
+
+Assignment10:
+Added comments
+Fixed regex (easy to understand now)
+Correctly calculates unary minus
+Now handles when dividing by zero
+
+Assignment11:
+Added comments
+Fixed mistake for trigonometry calculations, now Math.tan (and etc) accepts value in radians.
+Now handles when dividing by zero
