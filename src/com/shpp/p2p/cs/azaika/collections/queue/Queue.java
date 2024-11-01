@@ -2,6 +2,7 @@ package com.shpp.p2p.cs.azaika.collections.queue;
 
 import com.shpp.p2p.cs.azaika.collections.linkedlist.LinkedList;
 
+import java.util.EmptyStackException;
 import java.util.Iterator;
 
 /**
@@ -36,6 +37,16 @@ public class Queue <T> implements Iterable<T> {
     public T poll(){
         if (linkedList.isEmpty()) return null;
         return linkedList.remove(0);
+    }
+    /**
+     * Returns the element at the top of this stack without removing it.
+     *
+     * @return the element at the top of this stack
+     * @throws EmptyStackException if this stack is empty
+     */
+    public T peek() {
+        if (linkedList.isEmpty()) throw new EmptyStackException();
+        return linkedList.get(linkedList.size() - 1);
     }
 
     /**

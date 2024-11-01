@@ -113,6 +113,7 @@ public class LinkedList<T> implements Iterable<T> {
      * @return the element that was removed from the list
      */
     public T remove(int index) {
+        Objects.checkIndex(index, size);
         T removedElement;
         if (index == 0) {
             removedElement = head.element;
@@ -176,6 +177,7 @@ public class LinkedList<T> implements Iterable<T> {
         Node<T> current = head;
         for (int i = 0; i < size; i++) {
             if (current.element.equals(element)) return true;
+            current = current.next;
         }
         return false;
     }

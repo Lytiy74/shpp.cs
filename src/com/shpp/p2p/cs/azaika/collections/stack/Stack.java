@@ -56,6 +56,17 @@ public class Stack<T> implements Iterable<T> {
     }
 
     /**
+     * Returns the element at the top of this stack without removing it.
+     *
+     * @return the element at the top of this stack
+     * @throws EmptyStackException if this stack is empty
+     */
+    public T peek() {
+        if (linkedList.isEmpty()) throw new EmptyStackException();
+        return linkedList.get(linkedList.size() - 1);
+    }
+
+    /**
      * Returns the size
      *
      * @return the number of elements in this stack

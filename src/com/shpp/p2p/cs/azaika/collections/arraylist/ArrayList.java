@@ -63,18 +63,20 @@ public class ArrayList<T> implements Iterable<T> {
      * @param element the element to be inserted
      */
     public void add(int index, T element) {
-        Objects.checkIndex(index, size);
+        if (index < 0 || index > size) {
+            throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
+        }
         increaseArrayIfItFull();
         System.arraycopy(array, index, array, index + 1, size - index);
-        size++;
         array[index] = element;
+        size++;
     }
 
     /**
      * Increases the capacity of the array if it is full.
      */
     private void increaseArrayIfItFull() {
-        if (size >= array.length / COEFFICIENT_OF_LOAD_FACTOR) {
+        if (size >= array.length * COEFFICIENT_OF_LOAD_FACTOR) {
             T[] resizedArray = (T[]) new Object[array.length * 2];
             System.arraycopy(array, 0, resizedArray, 0, array.length);
             array = resizedArray;

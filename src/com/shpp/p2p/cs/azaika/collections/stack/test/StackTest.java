@@ -3,6 +3,8 @@ package com.shpp.p2p.cs.azaika.collections.stack.test;
 import com.shpp.p2p.cs.azaika.collections.FailedTestException;
 import com.shpp.p2p.cs.azaika.collections.stack.Stack;
 
+import java.util.EmptyStackException;
+
 
 public class StackTest {
     public static void main(String[] args) {
@@ -10,6 +12,10 @@ public class StackTest {
         stackTest.testPushAndPop();
         stackTest.testSize();
         stackTest.testIsEmpty();
+        stackTest.testPopFromEmptyStack();
+        stackTest.testPeekOnEmptyStack();
+        stackTest.testPeek();
+        stackTest.testSizeAfterPushAndPop();
 
     }
 
@@ -72,6 +78,59 @@ public class StackTest {
                         "\n Was : " + stack.isEmpty());
         System.out.println("✓ Test IsEmpty PASSED!");
 
+    }
+
+    private void testPeek() {
+        Stack<Integer> stack = new Stack<>();
+        stack.push(1);
+        stack.push(2);
+        stack.push(3);
+
+        int expected = 3;
+        int actual = stack.peek();
+        if (expected != actual) throw new FailedTestException(
+                "\n˟ Test peek FAILED!" +
+                        "\n Expected: " + expected +
+                        "\n Was: " + actual);
+
+        System.out.println("✓ Test peek PASSED!");
+    }
+
+
+    private void testSizeAfterPushAndPop() {
+        Stack<Integer> stack = new Stack<>();
+        stack.push(1);
+        stack.push(2);
+        stack.push(3);
+        stack.pop(); // Should remove 3
+
+        int expectedSize = 2; // Should be 2 after one pop
+        if (stack.size() != expectedSize) throw new FailedTestException(
+                "\n˟ Test size after push and pop FAILED!" +
+                        "\n Expected: " + expectedSize +
+                        "\n Was: " + stack.size());
+
+        System.out.println("✓ Test size after push and pop PASSED!");
+    }
+
+    private void testPopFromEmptyStack() {
+        Stack<Integer> stack = new Stack<>();
+        try {
+            stack.pop();
+            throw new FailedTestException("Test pop from empty stack FAILED! Expected exception was not thrown.");
+        } catch (EmptyStackException e) {
+            System.out.println("✓ Test pop from empty stack PASSED!");
+        }
+    }
+
+    private void testPeekOnEmptyStack() {
+        Stack<Integer> stack = new Stack<>();
+        try {
+            stack.peek();
+            throw new FailedTestException("Test peek on empty stack FAILED! Expected exception was not thrown.");
+        } catch (EmptyStackException e) {
+            System.out.println("✓ Test peek on empty stack PASSED!");
+        }
     }
 
 }

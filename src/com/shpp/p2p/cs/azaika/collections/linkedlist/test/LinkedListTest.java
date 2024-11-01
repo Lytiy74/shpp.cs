@@ -13,7 +13,9 @@ public class LinkedListTest {
         linkedListTest.testSize();
         linkedListTest.testIsEmpty();
         linkedListTest.testClear();
-
+        linkedListTest.testRemoveFromEmptyList();
+        linkedListTest.testGetFromEmptyList();
+        linkedListTest.testContains();
     }
 
     private void testAddCorrectOrder() {
@@ -137,4 +139,41 @@ public class LinkedListTest {
         System.out.println("✓ Test Clear PASSED!");
 
     }
+
+    private void testRemoveFromEmptyList() {
+        LinkedList<Integer> linkedList = new LinkedList<>();
+        try {
+            linkedList.remove(0);
+            throw new FailedTestException("Test remove from empty list FAILED! Expected exception was not thrown.");
+        } catch (IndexOutOfBoundsException e) {
+            System.out.println("✓ Test remove from empty list PASSED!");
+        }
+    }
+
+    private void testGetFromEmptyList() {
+        LinkedList<Integer> linkedList = new LinkedList<>();
+        try {
+            linkedList.get(0);
+            throw new FailedTestException("Test get from empty list FAILED! Expected exception was not thrown.");
+        } catch (IndexOutOfBoundsException e) {
+            System.out.println("✓ Test get from empty list PASSED!");
+        }
+    }
+
+    private void testContains() {
+        LinkedList<Integer> linkedList = new LinkedList<>();
+        linkedList.add(1);
+        linkedList.add(2);
+        linkedList.add(3);
+
+        boolean result = linkedList.contains(2);
+        if (!result) throw new FailedTestException("Test contains FAILED! Expected true for existing element.");
+
+        result = linkedList.contains(4);
+        if (result) throw new FailedTestException("Test contains FAILED! Expected false for non-existing element.");
+
+        System.out.println("✓ Test contains PASSED!");
+    }
+
+
 }
