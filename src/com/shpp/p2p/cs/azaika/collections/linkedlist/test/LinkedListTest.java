@@ -16,6 +16,7 @@ public class LinkedListTest {
         linkedListTest.testRemoveFromEmptyList();
         linkedListTest.testGetFromEmptyList();
         linkedListTest.testContains();
+        linkedListTest.testIterator();
     }
 
     private void testAddCorrectOrder() {
@@ -175,5 +176,22 @@ public class LinkedListTest {
         System.out.println("✓ Test contains PASSED!");
     }
 
+    private void testIterator() {
+        LinkedList<Integer> list = new LinkedList<>();
+        list.add(0);
+        list.add(1);
+        list.add(2);
 
+        StringBuilder result = new StringBuilder();
+        for (Integer value : list) {
+            result.append(value).append(" ");
+        }
+
+        String expected = "0 1 2 ";
+        if (!expected.equals(result.toString())) throw new FailedTestException(
+                "\n˟ Test iterator FAILED!" +
+                        "\n Expected: " + expected +
+                        "\n Was: " + result.toString());
+        System.out.println("✓ Test iterator PASSED!");
+    }
 }

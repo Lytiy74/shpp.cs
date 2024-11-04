@@ -16,6 +16,7 @@ public class StackTest {
         stackTest.testPeekOnEmptyStack();
         stackTest.testPeek();
         stackTest.testSizeAfterPushAndPop();
+        stackTest.testIterator();
 
     }
 
@@ -133,4 +134,22 @@ public class StackTest {
         }
     }
 
+    private void testIterator() {
+        Stack<Integer> stack = new Stack<>();
+        stack.push(0);
+        stack.push(1);
+        stack.push(2);
+
+        StringBuilder result = new StringBuilder();
+        for (Integer value : stack) {
+            result.append(value).append(" ");
+        }
+
+        String expected = "2 1 0 ";
+        if (!expected.equals(result.toString())) throw new FailedTestException(
+                "\n˟ Test iterator FAILED!" +
+                        "\n Expected: " + expected +
+                        "\n Was: " + result.toString());
+        System.out.println("✓ Test iterator PASSED!");
+    }
 }

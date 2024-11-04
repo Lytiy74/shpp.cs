@@ -227,7 +227,7 @@ public class ArrayListTest {
             throw new FailedTestException("Test get from empty list failed! " +
                     "Expected exception not thrown.");
         } catch (IndexOutOfBoundsException e) {
-            System.out.println("✓ Test get PASSED!");
+            System.out.println("✓ Test get from empty list PASSED!");
         }
 
     }
@@ -274,11 +274,10 @@ public class ArrayListTest {
         arrayList.add(1);
         arrayList.add(2);
 
-        Iterator<Integer> iterator = arrayList.iterator();
         StringBuilder result = new StringBuilder();
 
-        while (iterator.hasNext()) {
-            result.append(iterator.next()).append(" ");
+        for (Integer value : arrayList) {
+            result.append(value).append(" ");
         }
 
         String expected = "0 1 2 ";
